@@ -49,7 +49,7 @@ object Sdcard {
         val tries = ArrayList<File>()
         runCatching {
             if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
-                tries.add(File(File(Environment.getExternalStorageDirectory(), "AEmulator"), "$safe (${img.id})"))
+                tries.add(File(File(Environment.getExternalStorageDirectory(), "HASEEB_EMULATOR"), "$safe (${img.id})"))
             }
         }
         ctx.getExternalFilesDir(null)?.let { tries.add(File(it, "sdcard-${img.id}")) }
