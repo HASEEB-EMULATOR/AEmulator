@@ -254,11 +254,11 @@ private fun AppSettings(onBack: () -> Unit, onRestyle: () -> Unit) {
 
             item {
                 Section(stringResource(R.string.as_links)) {
-                    Row_(Icons.Rounded.Public, stringResource(R.string.as_site), "aemulator.gt.tc") { open(Links.SITE) }
-                    Row_(Icons.Rounded.Send, stringResource(R.string.as_channel), "@aemulatorofficial") { open(Links.CHANNEL) }
-                    Row_(Icons.Rounded.Person, stringResource(R.string.as_author), "uxazu") { open(Links.AUTHOR) }
-                    Row_(Icons.Rounded.History, stringResource(R.string.as_orig), "t.me/istratii_tech1") { open(Links.ORIGINAL) }
-                    Row_(Icons.Rounded.Code, stringResource(R.string.as_github), "github.com/uxazu/aemulator") { open(Links.GITHUB) }
+                    Row_(Icons.Rounded.Public, stringResource(R.string.as_site), "haseeb-emulator.v6.army") { open(Links.SITE) }
+                    Row_(Icons.Rounded.Send, stringResource(R.string.as_channel), "@HASEEB-EMULATOR") { open(Links.CHANNEL) }
+                    Row_(Icons.Rounded.Person, stringResource(R.string.as_author), "HASEEBHACKING") { open(Links.AUTHOR) }
+                    Row_(Icons.Rounded.History, stringResource(R.string.as_orig), "t.me/HASEEB-EMULATOR") { open(Links.ORIGINAL) }
+                    Row_(Icons.Rounded.Code, stringResource(R.string.as_github), "github.com/asgharali721975-prog/AEmulator") { open(Links.GITHUB) }
                 }
             }
 
