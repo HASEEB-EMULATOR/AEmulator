@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MotionScheme
@@ -16,18 +17,18 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 // base colours painted behind the glass layers
-private val BaseLight = Color(0xFFF3F1FB)
-private val BaseDark = Color(0xFF0A0C14)
+private val BaseLight = Color(0xFFF2F0FA)
+private val BaseDark = Color(0xFF080A12)
 
 private val Glass = Color.White
 
@@ -39,10 +40,10 @@ private val Light = lightColorScheme(
     tertiary = Color(0xFF9C63C8), onTertiary = Color.White,
     tertiaryContainer = Color(0xFFF1E2FF), onTertiaryContainer = Color(0xFF2C1040),
     background = Color.Transparent, surface = Color.Transparent,
-    surfaceContainerLow = Glass.copy(alpha = 0.42f),
-    surfaceContainer = Glass.copy(alpha = 0.58f),
-    surfaceContainerHigh = Glass.copy(alpha = 0.72f),
-    surfaceContainerHighest = Glass.copy(alpha = 0.85f),
+    surfaceContainerLow = Glass.copy(alpha = 0.55f),
+    surfaceContainer = Glass.copy(alpha = 0.68f),
+    surfaceContainerHigh = Glass.copy(alpha = 0.80f),
+    surfaceContainerHighest = Glass.copy(alpha = 0.92f),
     error = Color(0xFFBA1A1A),
 )
 
@@ -54,10 +55,10 @@ private val Dark = darkColorScheme(
     tertiary = Color(0xFFDDB3F5), onTertiary = Color(0xFF3F1E56),
     tertiaryContainer = Color(0xFF57336F), onTertiaryContainer = Color(0xFFF1E2FF),
     background = Color.Transparent, surface = Color.Transparent,
-    surfaceContainerLow = Glass.copy(alpha = 0.05f),
-    surfaceContainer = Glass.copy(alpha = 0.08f),
-    surfaceContainerHigh = Glass.copy(alpha = 0.11f),
-    surfaceContainerHighest = Glass.copy(alpha = 0.15f),
+    surfaceContainerLow = Glass.copy(alpha = 0.06f),
+    surfaceContainer = Glass.copy(alpha = 0.10f),
+    surfaceContainerHigh = Glass.copy(alpha = 0.14f),
+    surfaceContainerHighest = Glass.copy(alpha = 0.19f),
 )
 
 private val AppShapes = Shapes(
@@ -79,7 +80,7 @@ private val AppType = base.copy(
     labelLarge = base.labelLarge.copy(fontWeight = FontWeight.SemiBold),
 )
 
-/** soft "liquid" gradient drawn behind every screen */
+/** soft gradient, kept for screens that want it on their own surface */
 @Composable
 fun GlassBrush(): Brush = Brush.linearGradient(
     listOf(
@@ -90,6 +91,41 @@ fun GlassBrush(): Brush = Brush.linearGradient(
         MaterialTheme.colorScheme.primary.copy(alpha = 0.14f),
     )
 )
+
+/** coloured light blobs behind everything: this is what makes the cards read as glass */
+@Composable
+fun GlassBackdrop() {
+    val c = MaterialTheme.colorScheme
+    Box(Modifier.fillMaxSize()) {
+        Box(
+            Modifier.matchParentSize().background(
+                Brush.radialGradient(
+                    listOf(c.primary.copy(alpha = 0.50f), Color.Transparent),
+                    center = Offset(0f, 0f),
+                    radius = 900f
+                )
+            )
+        )
+        Box(
+            Modifier.matchParentSize().background(
+                Brush.radialGradient(
+                    listOf(c.tertiary.copy(alpha = 0.45f), Color.Transparent),
+                    center = Offset(1100f, 250f),
+                    radius = 800f
+                )
+            )
+        )
+        Box(
+            Modifier.matchParentSize().background(
+                Brush.radialGradient(
+                    listOf(c.secondary.copy(alpha = 0.35f), Color.Transparent),
+                    center = Offset(450f, 1900f),
+                    radius = 950f
+                )
+            )
+        )
+    }
+}
 
 @Composable
 fun AemuTheme(forceDark: Boolean? = null, content: @Composable () -> Unit) {
@@ -118,12 +154,8 @@ fun AemuTheme(forceDark: Boolean? = null, content: @Composable () -> Unit) {
         shapes = AppShapes,
         typography = AppType,
     ) {
-        Box(
-            Modifier
-                .fillMaxSize()
-                .background(if (dark) BaseDark else BaseLight)
-                .background(GlassBrush())
-        ) {
+        Box(Modifier.fillMaxSize().background(if (dark) BaseDark else BaseLight)) {
+            GlassBackdrop()
             content()
         }
     }
