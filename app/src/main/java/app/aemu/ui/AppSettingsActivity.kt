@@ -88,10 +88,10 @@ import app.aemu.R
 object Links {
     const val SITE = "https://haseeb-emulator.v6.army"
     const val GITHUB = "https://github.com/asgharali721975-prog/AEmulator"
-    const val CHANNEL = "https://t.me/HASEEB-EMULATOR"
+    const val CHANNEL = "https://t.me/HASEEB_EMULATOR"
     const val AUTHOR = "https://t.me/HASEEBHACKING"
-    const val ORIGINAL = "https://t.me/HASEEB-EMULATOR"
-    const val DONATE = "https://t.me/HASEEBHACKING/"
+    const val ORIGINAL = "https://t.me/HASEEB_EMULATOR"
+    const val DONATE = "https://t.me/HASEEBHACKING"
 
 }
 
@@ -255,9 +255,9 @@ private fun AppSettings(onBack: () -> Unit, onRestyle: () -> Unit) {
             item {
                 Section(stringResource(R.string.as_links)) {
                     Row_(Icons.Rounded.Public, stringResource(R.string.as_site), "haseeb-emulator.v6.army") { open(Links.SITE) }
-                    Row_(Icons.Rounded.Send, stringResource(R.string.as_channel), "@HASEEB-EMULATOR") { open(Links.CHANNEL) }
+                    Row_(Icons.Rounded.Send, stringResource(R.string.as_channel), "@HASEEB_EMULATOR") { open(Links.CHANNEL) }
                     Row_(Icons.Rounded.Person, stringResource(R.string.as_author), "HASEEBHACKING") { open(Links.AUTHOR) }
-                    Row_(Icons.Rounded.History, stringResource(R.string.as_orig), "t.me/HASEEB-EMULATOR") { open(Links.ORIGINAL) }
+                    Row_(Icons.Rounded.History, stringResource(R.string.as_orig), "t.me/HASEEB_EMULATOR") { open(Links.ORIGINAL) }
                     Row_(Icons.Rounded.Code, stringResource(R.string.as_github), "github.com/asgharali721975-prog/AEmulator") { open(Links.GITHUB) }
                 }
             }
