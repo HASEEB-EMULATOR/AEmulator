@@ -86,12 +86,13 @@ import app.aemu.R
 
 /** Ссылки проекта — одни и те же в приложении, README и на сайте. */
 object Links {
-    const val SITE = "https://aemulator.gt.tc"
-    const val GITHUB = "https://github.com/uxazu/aemulator"
-    const val CHANNEL = "https://t.me/aemulatorofficial"
-    const val AUTHOR = "https://github.com/uxazu"
-    const val ORIGINAL = "https://t.me/istratii_tech1"
-    const val DONATE = "https://dalink.to/uxazu"
+    const val SITE = "https://haseeb-emulator.v6.army"
+    const val GITHUB = "https://github.com/asgharali721975-prog/AEmulator"
+    const val CHANNEL = "https://t.me/HASEEB-EMULATOR"
+    const val AUTHOR = "https://t.me/HASEEBHACKING"
+    const val ORIGINAL = "https://t.me/HASEEB-EMULATOR"
+    const val DONATE = "https://t.me/HASEEBHACKING/"
+
 }
 
 class AppSettingsActivity : ComponentActivity() {
