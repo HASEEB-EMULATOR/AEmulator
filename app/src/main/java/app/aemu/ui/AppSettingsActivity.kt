@@ -314,7 +314,7 @@ private fun AboutCard() {
             Image(painterResource(R.drawable.logo), null, Modifier.size(64.dp).clip(RoundedCornerShape(20.dp)))
             Spacer(Modifier.width(16.dp))
             Column(Modifier.weight(1f)) {
-                Text("AEmulator", style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.onPrimaryContainer)
+                Text("HASEEB EMULATOR", style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.onPrimaryContainer)
                 Text(stringResource(R.string.as_version, BuildConfig.VERSION_NAME), style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onPrimaryContainer)
                 Spacer(Modifier.height(4.dp))
