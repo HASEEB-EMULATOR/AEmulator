@@ -1,4 +1,4 @@
-package app.aemu.ui
+package com.haseeb.emulator.ui
 
 import android.Manifest
 import android.content.Intent
@@ -78,34 +78,34 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import app.aemu.BuildConfig
-import app.aemu.update.AppUpdateManager
-import app.aemu.update.ReleaseInfo
-import app.aemu.update.UpdateState
+import com.haseeb.emulator.BuildConfig
+import com.haseeb.emulator.update.AppUpdateManager
+import com.haseeb.emulator.update.ReleaseInfo
+import com.haseeb.emulator.update.UpdateState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import app.aemu.core.GuestImage
-import app.aemu.R
+import com.haseeb.emulator.core.GuestImage
+import com.haseeb.emulator.R
 import androidx.compose.ui.res.stringResource
 import androidx.compose.material.icons.rounded.Settings
 import android.content.Context
 
-const val ACTION_BOOT = "app.aemu.BOOT"
+const val ACTION_BOOT = "com.haseeb.emulator.BOOT"
 
 class MainActivity : ComponentActivity() {
     private val model: LibraryModel by viewModels()
 
     /** Language this activity was created with: a change means its string resources are stale and need context recreation. */
     private var style = ""
-    private fun styleOf(c: Context) = app.aemu.AppPrefs.language(c)
+    private fun styleOf(c: Context) = com.haseeb.emulator.AppPrefs.language(c)
 
     override fun attachBaseContext(base: Context) {
         style = styleOf(base)
-        super.attachBaseContext(app.aemu.AppPrefs.wrap(base))
+        super.attachBaseContext(com.haseeb.emulator.AppPrefs.wrap(base))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -142,7 +142,7 @@ class MainActivity : ComponentActivity() {
         if (importPath != null) {
             model.import(android.net.Uri.fromFile(java.io.File(importPath)))
         }
-        // ярлыки и автоматизация: am start -a app.aemu.BOOT --es id <образ>
+        // ярлыки и автоматизация: am start -a com.haseeb.emulator.BOOT --es id <образ>
         if (i?.action == ACTION_BOOT) i.getStringExtra("id")?.let { VmActivity.start(this, it, i.getBooleanExtra("recovery", false)) }
     }
 
@@ -176,10 +176,10 @@ fun Library(model: LibraryModel) {
     var downloadJob by remember { mutableStateOf<Job?>(null) }
 
     LaunchedEffect(Unit) {
-        if (app.aemu.AppPrefs.autoCheckUpdates(ctx)) {
+        if (com.haseeb.emulator.AppPrefs.autoCheckUpdates(ctx)) {
             val now = System.currentTimeMillis()
-            if (now - app.aemu.AppPrefs.lastUpdateCheck(ctx) > 3600_000L) {
-                app.aemu.AppPrefs.setLastUpdateCheck(ctx, now)
+            if (now - com.haseeb.emulator.AppPrefs.lastUpdateCheck(ctx) > 3600_000L) {
+                com.haseeb.emulator.AppPrefs.setLastUpdateCheck(ctx, now)
                 val res = AppUpdateManager.checkLatestRelease()
                 res.getOrNull()?.let { rel ->
                     if (AppUpdateManager.isNewerVersion(rel.versionName, BuildConfig.VERSION_NAME)) {
@@ -320,14 +320,14 @@ private fun ContainerDialog(
     src: GuestImage,
     images: List<GuestImage>,
     onDismiss: () -> Unit,
-    onCreate: (GuestImage, String, Boolean, app.aemu.core.VmSettings) -> Unit
+    onCreate: (GuestImage, String, Boolean, com.haseeb.emulator.core.VmSettings) -> Unit
 ) {
     var from by remember { mutableStateOf(src) }
     var name by remember(from) { mutableStateOf("${from.name} (${images.count { it.baseId == from.id || it.baseId == from.baseId.ifEmpty { "-" } } + 2})") }
     var copy by remember { mutableStateOf(false) }
     var preset by remember { mutableStateOf(1) } // 0: Perf, 1: Balanced, 2: Lite
     var settings by remember(from) { mutableStateOf(from.settings) }
-    val has32 = app.aemu.core.CpuInfo.hasAArch32
+    val has32 = com.haseeb.emulator.core.CpuInfo.hasAArch32
 
     fun applyPreset(p: Int) {
         preset = p

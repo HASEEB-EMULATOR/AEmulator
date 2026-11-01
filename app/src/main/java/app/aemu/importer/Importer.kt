@@ -1,13 +1,13 @@
-package app.aemu.importer
+package com.haseeb.emulator.importer
 
 import android.content.Context
 import android.net.Uri
 import android.system.Os
-import app.aemu.core.GuestImage
-import app.aemu.core.ImageStore
-import app.aemu.core.TreeFixer
-import app.aemu.core.VmPaths
-import app.aemu.core.RecoveryImage
+import com.haseeb.emulator.core.GuestImage
+import com.haseeb.emulator.core.ImageStore
+import com.haseeb.emulator.core.TreeFixer
+import com.haseeb.emulator.core.VmPaths
+import com.haseeb.emulator.core.RecoveryImage
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream
 import org.apache.commons.compress.archivers.sevenz.SevenZFile

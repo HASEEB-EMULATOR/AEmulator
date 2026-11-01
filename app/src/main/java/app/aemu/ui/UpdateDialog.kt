@@ -1,4 +1,4 @@
-package app.aemu.ui
+package com.haseeb.emulator.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -28,10 +28,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import app.aemu.R
-import app.aemu.update.AppUpdateManager
-import app.aemu.update.ReleaseInfo
-import app.aemu.update.UpdateState
+import com.haseeb.emulator.R
+import com.haseeb.emulator.update.AppUpdateManager
+import com.haseeb.emulator.update.ReleaseInfo
+import com.haseeb.emulator.update.UpdateState
 import java.io.File
 
 @Composable

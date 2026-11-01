@@ -1,4 +1,4 @@
-package app.aemu.core
+package com.haseeb.emulator.core
 
 import android.os.Environment
 import java.io.File

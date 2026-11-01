@@ -1,4 +1,4 @@
-package app.aemu.ui
+package com.haseeb.emulator.ui
 
 import android.text.format.Formatter
 import androidx.compose.animation.core.Spring
@@ -74,8 +74,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import app.aemu.R
-import app.aemu.core.GuestImage
+import com.haseeb.emulator.R
+import com.haseeb.emulator.core.GuestImage
 
 /**
  * The vendor's look for a machine card: a "screen" gradient that tells TouchWiz, MIUI, Sense, Xperia… apart at a
@@ -206,7 +206,7 @@ fun LibrarySheet(
 ) {
     var files by remember { mutableStateOf(emptyList<java.io.File>()) }
     DisposableEffect(Unit) {
-        val t = Thread { files = app.aemu.core.FirmwareFolder.list() }.apply { start() }
+        val t = Thread { files = com.haseeb.emulator.core.FirmwareFolder.list() }.apply { start() }
         onDispose { t.interrupt() }
     }
     ModalBottomSheet(

@@ -1,4 +1,4 @@
-package app.aemu.core
+package com.haseeb.emulator.core
 
 import org.json.JSONArray
 import org.json.JSONObject

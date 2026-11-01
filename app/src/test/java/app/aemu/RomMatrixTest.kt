@@ -1,4 +1,4 @@
-package app.aemu
+package com.haseeb.emulator
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -111,7 +111,7 @@ class RomMatrixTest {
 
     @Test
     fun testQcomParkedComponents() {
-        val qcomList = app.aemu.core.TreeFixer.QCOM_PARK
+        val qcomList = com.haseeb.emulator.core.TreeFixer.QCOM_PARK
         assertTrue(qcomList.contains("system/etc/permissions/qti_permissions.xml"))
         assertTrue(qcomList.contains("system/etc/permissions/com.qti.dpmframework.xml"))
         assertTrue(qcomList.contains("system/priv-app/com.qualcomm.location"))

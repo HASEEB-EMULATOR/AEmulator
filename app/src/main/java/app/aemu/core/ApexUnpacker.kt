@@ -1,9 +1,9 @@
-package app.aemu.core
+package com.haseeb.emulator.core
 
 import android.system.Os
-import app.aemu.importer.ChannelSource
-import app.aemu.importer.ErofsImage
-import app.aemu.importer.Ext4Reader
+import com.haseeb.emulator.importer.ChannelSource
+import com.haseeb.emulator.importer.ErofsImage
+import com.haseeb.emulator.importer.Ext4Reader
 import java.io.File
 import java.nio.channels.FileChannel
 import java.nio.file.StandardOpenOption

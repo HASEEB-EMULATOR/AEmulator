@@ -1,4 +1,4 @@
-package app.aemu.core
+package com.haseeb.emulator.core
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -8,8 +8,8 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
-import app.aemu.R
-import app.aemu.ui.VmActivity
+import com.haseeb.emulator.R
+import com.haseeb.emulator.ui.VmActivity
 
 /**
  * Служба переднего плана процесса :vm. Пока она жива, Android не выгружает процесс
@@ -31,7 +31,7 @@ class Keeper : Service() {
     companion object {
         private const val CH = "vm"
         private const val ID = 1
-        const val STOP = "app.aemu.KEEPER_STOP"
+        const val STOP = "com.haseeb.emulator.KEEPER_STOP"
 
         fun ensureChannel(ctx: Context) {
             runCatching {

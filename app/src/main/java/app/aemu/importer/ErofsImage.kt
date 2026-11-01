@@ -1,4 +1,4 @@
-package app.aemu.importer
+package com.haseeb.emulator.importer
 
 import java.io.ByteArrayInputStream
 import java.io.IOException

@@ -1,4 +1,4 @@
-package app.aemu.ui
+package com.haseeb.emulator.ui
 
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -63,9 +63,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import app.aemu.update.AppUpdateManager
-import app.aemu.update.ReleaseInfo
-import app.aemu.update.UpdateState
+import com.haseeb.emulator.update.AppUpdateManager
+import com.haseeb.emulator.update.ReleaseInfo
+import com.haseeb.emulator.update.UpdateState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -80,9 +80,9 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
-import app.aemu.AppPrefs
-import app.aemu.BuildConfig
-import app.aemu.R
+import com.haseeb.emulator.AppPrefs
+import com.haseeb.emulator.BuildConfig
+import com.haseeb.emulator.R
 
 /** Ссылки проекта — одни и те же в приложении, README и на сайте. */
 object Links {
@@ -242,7 +242,7 @@ private fun AppSettings(onBack: () -> Unit, onRestyle: () -> Unit) {
 
             item {
                 Section(stringResource(R.string.as_defaults), stringResource(R.string.as_defaults_sub)) {
-                    fun set(s: app.aemu.core.VmSettings) { defaults = s; AppPrefs.setDefaults(ctx, s) }
+                    fun set(s: com.haseeb.emulator.core.VmSettings) { defaults = s; AppPrefs.setDefaults(ctx, s) }
                     Toggle(stringResource(R.string.vs_gpu), stringResource(R.string.vs_gpu_sub), defaults.gpu) { set(defaults.copy(gpu = it)) }
                     Toggle(stringResource(R.string.vs_jit), stringResource(R.string.vs_jit_sub), defaults.jit) { set(defaults.copy(jit = it)) }
                     Toggle(stringResource(R.string.vs_proxy), stringResource(R.string.vs_proxy_sub), defaults.netProxy) { set(defaults.copy(netProxy = it)) }

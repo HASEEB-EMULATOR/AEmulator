@@ -1,4 +1,4 @@
-package app.aemu.core
+package com.haseeb.emulator.core
 
 /**
  * The renderer of guest programs on the phone's GPU (native/glbridge/host.c): the guest's GLES driver connects to

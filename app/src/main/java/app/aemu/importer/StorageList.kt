@@ -1,4 +1,4 @@
-package app.aemu.importer
+package com.haseeb.emulator.importer
 
 import java.io.File
 import java.nio.ByteBuffer
