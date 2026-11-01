@@ -1,4 +1,4 @@
-package app.aemu.ui
+package com.haseeb.emulator.ui
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -68,19 +68,19 @@ fun AemuTheme(forceDark: Boolean? = null, content: @Composable () -> Unit) {
     // the main screen stays alive while the settings screen changes the theme: follow the stored value
     val rev = androidx.compose.runtime.remember { androidx.compose.runtime.mutableIntStateOf(0) }
     androidx.compose.runtime.DisposableEffect(ctx) {
-        val sp = app.aemu.AppPrefs.prefs(ctx)
+        val sp = com.haseeb.emulator.AppPrefs.prefs(ctx)
         val l = android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, _ -> rev.intValue++ }
         sp.registerOnSharedPreferenceChangeListener(l)
         onDispose { sp.unregisterOnSharedPreferenceChangeListener(l) }
     }
     rev.intValue
-    val dark = forceDark ?: when (app.aemu.AppPrefs.theme(ctx)) {
-        app.aemu.AppPrefs.THEME_LIGHT -> false
-        app.aemu.AppPrefs.THEME_DARK -> true
+    val dark = forceDark ?: when (com.haseeb.emulator.AppPrefs.theme(ctx)) {
+        com.haseeb.emulator.AppPrefs.THEME_LIGHT -> false
+        com.haseeb.emulator.AppPrefs.THEME_DARK -> true
         else -> isSystemInDarkTheme()
     }
     val scheme = when {
-        Build.VERSION.SDK_INT >= 31 && app.aemu.AppPrefs.dynamicColor(ctx) -> if (dark) dynamicDarkColorScheme(ctx) else dynamicLightColorScheme(ctx)
+        Build.VERSION.SDK_INT >= 31 && com.haseeb.emulator.AppPrefs.dynamicColor(ctx) -> if (dark) dynamicDarkColorScheme(ctx) else dynamicLightColorScheme(ctx)
         dark -> Dark
         else -> Light
     }
