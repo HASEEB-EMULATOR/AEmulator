@@ -1,0 +1,65 @@
+name: Apply root patch
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Apply the patch
+        run: |
+          python3 - <<'PY'
+          import base64, os
+
+          TF = "app/src/main/java/app/aemu/core/TreeFixer.kt"
+          VM = "app/src/main/java/app/aemu/ui/VmActivity.kt"
+          RD = "app/src/main/java/app/aemu/ui/RootDialog.kt"
+
+          TF_BLOCK = base64.b64decode("ICAgICAgICAvLyByb290OiB0aGUgZW5naW5lIGFjY2VwdHMgc2V0dWlkKCkgZnJvbSBhbnkgZ3Vlc3QgcHJvZ3JhbSwgc28gYSBwbGFpbiBzdSBiaW5hcnkgaXMgZW5vdWdoLgogICAgICAgIC8vIC9zeXN0ZW0veGJpbi9zdSBpcyBhIHdyYXBwZXIgdGhhdCBjaGVja3MgdGhlIGNhbGxlcidzIHVpZCBhZ2FpbnN0IHRoZSBsaXN0IHRoZSAiUm9vdCBhY2Nlc3MiIG1lbnUgd3JpdGVzLgogICAgICAgIHJ1bkNhdGNoaW5nIHsKICAgICAgICAgICAgdmFsIGJpbiA9IEZpbGUocm9vdCwgInN5c3RlbS94YmluL2FlbXUtc3UiKQogICAgICAgICAgICBiaW4ucGFyZW50RmlsZT8ubWtkaXJzKCkKICAgICAgICAgICAgRW5naW5lQXNzZXRzLm9wZW4oY3R4LCAiZW5naW5lcy9jb21tb24vYWVtdS1zdSIpLnVzZSB7IGkgLT4gYmluLm91dHB1dFN0cmVhbSgpLnVzZSB7IG8gLT4gaS5jb3B5VG8obykgfSB9CiAgICAgICAgICAgIGJpbi5zZXRSZWFkYWJsZSh0cnVlLCBmYWxzZSkKICAgICAgICAgICAgYmluLnNldEV4ZWN1dGFibGUodHJ1ZSwgZmFsc2UpCiAgICAgICAgICAgIHZhbCBzaGltID0gRmlsZShyb290LCAic3lzdGVtL3hiaW4vc3UiKQogICAgICAgICAgICBpZiAoc2hpbS5leGlzdHMoKSkgc2hpbS5kZWxldGUoKQogICAgICAgICAgICBzaGltLndyaXRlVGV4dCgKICAgICAgICAgICAgICAgICIjIS9zeXN0ZW0vYmluL3NoXG4iICsKICAgICAgICAgICAgICAgICAgICAiTUU9XCQoaWQgLXUpXG4iICsKICAgICAgICAgICAgICAgICAgICAiTD0vZGF0YS9sb2NhbC90bXAvYWVtdS1zdS1hbGxvd1xuIiArCiAgICAgICAgICAgICAgICAgICAgImlmIFsgLWYgXCJcJExcIiBdICYmIGdyZXAgLXF4IFwiXCRNRVwiIFwiXCRMXCI7IHRoZW4gZXhlYyAvc3lzdGVtL3hiaW4vYWVtdS1zdSBcIlwkQFwiOyBmaVxuIiArCiAgICAgICAgICAgICAgICAgICAgImVjaG8gXCJzdTogYWNjZXNzIGRlbmllZCBmb3IgdWlkIFwkTUVcIiA+JjJcbiIgKwogICAgICAgICAgICAgICAgICAgICJleGl0IDFcbiIKICAgICAgICAgICAgKQogICAgICAgICAgICBzaGltLnNldFJlYWRhYmxlKHRydWUsIGZhbHNlKQogICAgICAgICAgICBzaGltLnNldEV4ZWN1dGFibGUodHJ1ZSwgZmFsc2UpCiAgICAgICAgICAgIGNvcGllZCsrCiAgICAgICAgfS5vbkZhaWx1cmUgeyBsb2coInN1OiAke2l0Lm1lc3NhZ2V9IikgfQo=").decode("utf-8")
+          ROOT_DIALOG = base64.b64decode("cGFja2FnZSBhcHAuYWVtdS51aQoKaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UuZm91bmRhdGlvbi5jbGlja2FibGUKaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UuZm91bmRhdGlvbi5sYXlvdXQuQ29sdW1uCmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLmZvdW5kYXRpb24ubGF5b3V0LlJvdwppbXBvcnQgYW5kcm9pZHguY29tcG9zZS5mb3VuZGF0aW9uLmxheW91dC5TcGFjZXIKaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UuZm91bmRhdGlvbi5sYXlvdXQuZmlsbE1heFdpZHRoCmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLmZvdW5kYXRpb24ubGF5b3V0LmhlaWdodAppbXBvcnQgYW5kcm9pZHguY29tcG9zZS5mb3VuZGF0aW9uLmxheW91dC5oZWlnaHRJbgppbXBvcnQgYW5kcm9pZHguY29tcG9zZS5mb3VuZGF0aW9uLmxheW91dC5wYWRkaW5nCmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLmZvdW5kYXRpb24ubGF6eS5MYXp5Q29sdW1uCmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLmZvdW5kYXRpb24ubGF6eS5pdGVtcwppbXBvcnQgYW5kcm9pZHguY29tcG9zZS5tYXRlcmlhbDMuQWxlcnREaWFsb2cKaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UubWF0ZXJpYWwzLkNoZWNrYm94CmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLm1hdGVyaWFsMy5NYXRlcmlhbFRoZW1lCmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLm1hdGVyaWFsMy5UZXh0CmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLm1hdGVyaWFsMy5UZXh0QnV0dG9uCmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLnJ1bnRpbWUuQ29tcG9zYWJsZQppbXBvcnQgYW5kcm9pZHguY29tcG9zZS5ydW50aW1lLkxhdW5jaGVkRWZmZWN0CmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLnJ1bnRpbWUuZ2V0VmFsdWUKaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UucnVudGltZS5tdXRhYmxlU3RhdGVPZgppbXBvcnQgYW5kcm9pZHguY29tcG9zZS5ydW50aW1lLnJlbWVtYmVyCmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLnJ1bnRpbWUuc2V0VmFsdWUKaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UudWkuQWxpZ25tZW50CmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLnVpLk1vZGlmaWVyCmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLnVpLnVuaXQuZHAKaW1wb3J0IGFwcC5hZW11LmNvcmUuR3Vlc3RWbQoKLyoqIHdoZXJlIHRoZSBndWVzdCdzIHN1IHdyYXBwZXIgbG9va3MgZm9yIHRoZSB1aWRzIHRoYXQgbWF5IGJlY29tZSByb290ICovCnByaXZhdGUgY29uc3QgdmFsIEFMTE9XID0gIi9kYXRhL2xvY2FsL3RtcC9hZW11LXN1LWFsbG93IgoKcHJpdmF0ZSBkYXRhIGNsYXNzIFJvb3RBcHAodmFsIHBrZzogU3RyaW5nLCB2YWwgdWlkOiBJbnQpCgovKioKICogIlJvb3QgYWNjZXNzIjogcGljayB0aGUgYXBwcyB3aG9zZSBzdSBjYWxscyBhcmUgYWxsb3dlZC4gVGhlIGxpc3QgaXMgd3JpdHRlbiBpbnRvIHRoZSBndWVzdCBhcyBvbmUKICogdWlkIHBlciBsaW5lOyAvc3lzdGVtL3hiaW4vc3UgKGluc3RhbGxlZCBhdCBpbXBvcnQpIGNoZWNrcyBpdCBiZWZvcmUgaXQgaGFuZHMgb3V0IHJvb3QuCiAqLwpAQ29tcG9zYWJsZQpmdW4gUm9vdEFjY2Vzc0RpYWxvZyh2bTogR3Vlc3RWbSwgb25EaXNtaXNzOiAoKSAtPiBVbml0KSB7CiAgICB2YXIgYXBwcyBieSByZW1lbWJlciB7IG11dGFibGVTdGF0ZU9mPExpc3Q8Um9vdEFwcD4+KGVtcHR5TGlzdCgpKSB9CiAgICB2YXIgYWxsb3dlZCBieSByZW1lbWJlciB7IG11dGFibGVTdGF0ZU9mPFNldDxJbnQ+PihlbXB0eVNldCgpKSB9CiAgICB2YXIgbG9hZGluZyBieSByZW1lbWJlciB7IG11dGFibGVTdGF0ZU9mKHRydWUpIH0KCiAgICBMYXVuY2hlZEVmZmVjdChVbml0KSB7CiAgICAgICAgdmFsIG91dCA9IHJ1bkNhdGNoaW5nIHsgdm0uZ3Vlc3RTaGVsbCgicG0gbGlzdCBwYWNrYWdlcyAtMyAtVSAyPi9kZXYvbnVsbCIsIDQwXzAwMCkgfS5nZXRPckRlZmF1bHQoIiIpCiAgICAgICAgdmFsIHJlID0gUmVnZXgoInBhY2thZ2U6KFxcUyspXFxzK3VpZDooXFxkKykiKQogICAgICAgIGFwcHMgPSBvdXQubGluZVNlcXVlbmNlKCkubWFwTm90TnVsbCB7IGxpbmUgLT4KICAgICAgICAgICAgdmFsIG0gPSByZS5maW5kKGxpbmUpID86IHJldHVybkBtYXBOb3ROdWxsIG51bGwKICAgICAgICAgICAgUm9vdEFwcChtLmdyb3VwVmFsdWVzWzFdLCBtLmdyb3VwVmFsdWVzWzJdLnRvSW50T3JOdWxsKCkgPzogcmV0dXJuQG1hcE5vdE51bGwgbnVsbCkKICAgICAgICB9LnNvcnRlZEJ5IHsgaXQucGtnIH0udG9MaXN0KCkKICAgICAgICB2YWwgY3VyID0gcnVuQ2F0Y2hpbmcgeyB2bS5ndWVzdFNoZWxsKCJjYXQgJEFMTE9XIDI+L2Rldi9udWxsIiwgMTBfMDAwKSB9LmdldE9yRGVmYXVsdCgiIikKICAgICAgICBhbGxvd2VkID0gY3VyLmxpbmVTZXF1ZW5jZSgpLm1hcE5vdE51bGwgeyBpdC50cmltKCkudG9JbnRPck51bGwoKSB9LnRvU2V0KCkKICAgICAgICBsb2FkaW5nID0gZmFsc2UKICAgIH0KCiAgICBBbGVydERpYWxvZygKICAgICAgICBvbkRpc21pc3NSZXF1ZXN0ID0gb25EaXNtaXNzLAogICAgICAgIHRpdGxlID0geyBUZXh0KCJSb290IGFjY2VzcyIpIH0sCiAgICAgICAgdGV4dCA9IHsKICAgICAgICAgICAgaWYgKGxvYWRpbmcpIHsKICAgICAgICAgICAgICAgIFRleHQoIlJlYWRpbmcgdGhlIGFwcCBsaXN0IGZyb20gdGhlIHN5c3RlbeKApiIpCiAgICAgICAgICAgIH0gZWxzZSB7CiAgICAgICAgICAgICAgICBDb2x1bW4oTW9kaWZpZXIuaGVpZ2h0SW4obWF4ID0gNDIwLmRwKSkgewogICAgICAgICAgICAgICAgICAgIFRleHQoCiAgICAgICAgICAgICAgICAgICAgICAgICJUaWNrIHRoZSBhcHBzIHRoYXQgbWF5IHVzZSBzdS4gTm90aGluZyBlbHNlIGdldHMgcm9vdC4iLAogICAgICAgICAgICAgICAgICAgICAgICBzdHlsZSA9IE1hdGVyaWFsVGhlbWUudHlwb2dyYXBoeS5ib2R5U21hbGwKICAgICAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAgICAgU3BhY2VyKE1vZGlmaWVyLmhlaWdodCg4LmRwKSkKICAgICAgICAgICAgICAgICAgICBpZiAoYXBwcy5pc0VtcHR5KCkpIHsKICAgICAgICAgICAgICAgICAgICAgICAgVGV4dCgiTm8gdXNlciBhcHBzIGluc3RhbGxlZCBpbiB0aGlzIHN5c3RlbS4iLCBzdHlsZSA9IE1hdGVyaWFsVGhlbWUudHlwb2dyYXBoeS5ib2R5TWVkaXVtKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICAgICBMYXp5Q29sdW1uIHsKICAgICAgICAgICAgICAgICAgICAgICAgaXRlbXMoYXBwcykgeyBhIC0+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICBSb3coCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgTW9kaWZpZXIKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLmZpbGxNYXhXaWR0aCgpCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC5jbGlja2FibGUgewogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYWxsb3dlZCA9IGlmIChhLnVpZCBpbiBhbGxvd2VkKSBhbGxvd2VkIC0gYS51aWQgZWxzZSBhbGxvd2VkICsgYS51aWQKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAucGFkZGluZyh2ZXJ0aWNhbCA9IDYuZHApLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHZlcnRpY2FsQWxpZ25tZW50ID0gQWxpZ25tZW50LkNlbnRlclZlcnRpY2FsbHkKICAgICAgICAgICAgICAgICAgICAgICAgICAgICkgewogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIENoZWNrYm94KAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjaGVja2VkID0gYS51aWQgaW4gYWxsb3dlZCwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgb25DaGVja2VkQ2hhbmdlID0geyBvbiAtPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYWxsb3dlZCA9IGlmIChvbikgYWxsb3dlZCArIGEudWlkIGVsc2UgYWxsb3dlZCAtIGEudWlkCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQ29sdW1uKE1vZGlmaWVyLnBhZGRpbmcoc3RhcnQgPSA4LmRwKSkgewogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBUZXh0KGEucGtnLCBzdHlsZSA9IE1hdGVyaWFsVGhlbWUudHlwb2dyYXBoeS5ib2R5TWVkaXVtKQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBUZXh0KCJ1aWQgJHthLnVpZH0iLCBzdHlsZSA9IE1hdGVyaWFsVGhlbWUudHlwb2dyYXBoeS5sYWJlbFNtYWxsKQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgfQogICAgICAgIH0sCiAgICAgICAgY29uZmlybUJ1dHRvbiA9IHsKICAgICAgICAgICAgVGV4dEJ1dHRvbihvbkNsaWNrID0gewogICAgICAgICAgICAgICAgdmFsIGJvZHkgPSBhbGxvd2VkLmpvaW5Ub1N0cmluZygiXG4iKQogICAgICAgICAgICAgICAgdm0uZ3Vlc3RTaGVsbCgKICAgICAgICAgICAgICAgICAgICAibWtkaXIgLXAgL2RhdGEvbG9jYWwvdG1wOyBwcmludGYgJyVzXFxuJyAnIiArIGJvZHkgKyAiJyA+ICIgKyBBTExPVyArCiAgICAgICAgICAgICAgICAgICAgICAgICI7IGNobW9kIDY0NCAiICsgQUxMT1csCiAgICAgICAgICAgICAgICAgICAgMjBfMDAwCiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICBvbkRpc21pc3MoKQogICAgICAgICAgICB9KSB7IFRleHQoIlNhdmUiKSB9CiAgICAgICAgfSwKICAgICAgICBkaXNtaXNzQnV0dG9uID0geyBUZXh0QnV0dG9uKG9uQ2xpY2sgPSBvbkRpc21pc3MpIHsgVGV4dCgiQ2FuY2VsIikgfSB9LAogICAgKQp9Cg==").decode("utf-8")
+
+          TF_ANCHOR = '        if (copied > 0) log("engine n64 files updated: $copied")\n'
+          VM_STATE_ANCHOR = '        var menu by remember { mutableStateOf(false) }\n'
+          VM_STATE_NEW = VM_STATE_ANCHOR + '        var rootDialog by remember { mutableStateOf(false) }\n        if (rootDialog) RootAccessDialog(vm) { rootDialog = false }\n'
+          VM_MENU_ANCHOR = '                    DropdownMenuItem(text = { Text(stringResource(R.string.m_terminal)) }, leadingIcon = { Icon(Icons.Rounded.Code, null) },\n                        enabled = running, onClick = { menu = false; showTerm = true })\n'
+          VM_MENU_NEW = VM_MENU_ANCHOR + '                    DropdownMenuItem(text = { Text("Root access") }, leadingIcon = { Icon(Icons.Rounded.Security, null) },\n                        enabled = running, onClick = { menu = false; rootDialog = true })\n'
+
+          def apply(path, anchor, new, tag):
+              s = open(path, encoding="utf-8").read()
+              if tag in s:
+                  print("  already there:", tag)
+                  return
+              if anchor not in s:
+                  print("  ANCHOR MISSING:", tag)
+                  return
+              s = s.replace(anchor, new, 1)
+              open(path, "w", encoding="utf-8").write(s)
+              print("  patched:", tag)
+
+          if os.path.exists(RD):
+              print("RootDialog.kt already exists")
+          else:
+              open(RD, "w", encoding="utf-8").write(ROOT_DIALOG)
+              print("wrote RootDialog.kt")
+
+          print("TreeFixer:")
+          apply(TF, TF_ANCHOR, TF_BLOCK + TF_ANCHOR, "aemu-su")
+          print("VmActivity:")
+          apply(VM, VM_STATE_ANCHOR, VM_STATE_NEW, "var rootDialog")
+          apply(VM, VM_MENU_ANCHOR, VM_MENU_NEW, 'Text("Root access")')
+
+          PY
+
+      - name: Commit
+        run: |
+          git config user.name "root-patch-bot"
+          git config user.email "root-patch-bot@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "nothing to commit"
+          else
+            git commit -m "add root access menu (su for selected apps)"
+            git push
+          fi
