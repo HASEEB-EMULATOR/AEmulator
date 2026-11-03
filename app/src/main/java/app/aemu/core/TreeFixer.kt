@@ -624,6 +624,28 @@ class TreeFixer(
                 jar.setReadable(true, false); copied++
             }
         }.onFailure { log("aemu-stubs.jar: ${it.message}") }
+        // root: the engine accepts setuid() from any guest program, so a plain su binary is enough.
+        // /system/xbin/su is a wrapper that checks the caller's uid against the list the "Root access" menu writes.
+        runCatching {
+            val bin = File(root, "system/xbin/aemu-su")
+            bin.parentFile?.mkdirs()
+            EngineAssets.open(ctx, "engines/common/aemu-su").use { i -> bin.outputStream().use { o -> i.copyTo(o) } }
+            bin.setReadable(true, false)
+            bin.setExecutable(true, false)
+            val shim = File(root, "system/xbin/su")
+            if (shim.exists()) shim.delete()
+            shim.writeText(
+                "#!/system/bin/sh\n" +
+                    "ME=\$(id -u)\n" +
+                    "L=/data/local/tmp/aemu-su-allow\n" +
+                    "if [ -f \"\$L\" ] && grep -qx \"\$ME\" \"\$L\"; then exec /system/xbin/aemu-su \"\$@\"; fi\n" +
+                    "echo \"su: access denied for uid \$ME\" >&2\n" +
+                    "exit 1\n"
+            )
+            shim.setReadable(true, false)
+            shim.setExecutable(true, false)
+            copied++
+        }.onFailure { log("su: ${it.message}") }
         if (copied > 0) log("engine n64 files updated: $copied")
         // qemu-arm (the firmware's 32-bit programs) asks for the lowest mappable address; the phone hides the real file
         runCatching { File(root, "proc/sys/vm").mkdirs(); File(root, "proc/sys/vm/mmap_min_addr").writeText("65536") }
