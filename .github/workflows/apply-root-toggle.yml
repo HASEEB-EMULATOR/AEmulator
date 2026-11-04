@@ -1,0 +1,49 @@
+name: Root toggle
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  toggle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Apply
+        run: |
+          python3 - <<'PY'
+          import base64, os
+
+          RD = "app/src/main/java/app/aemu/ui/RootDialog.kt"
+          TF = "app/src/main/java/app/aemu/core/TreeFixer.kt"
+
+          ROOT_DIALOG = base64.b64decode("cGFja2FnZSBhcHAuYWVtdS51aQoKaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UuZm91bmRhdGlvbi5sYXlvdXQuQ29sdW1uCmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLmZvdW5kYXRpb24ubGF5b3V0LlJvdwppbXBvcnQgYW5kcm9pZHguY29tcG9zZS5mb3VuZGF0aW9uLmxheW91dC5TcGFjZXIKaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UuZm91bmRhdGlvbi5sYXlvdXQuaGVpZ2h0CmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLmZvdW5kYXRpb24ubGF5b3V0LndpZHRoCmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLm1hdGVyaWFsMy5BbGVydERpYWxvZwppbXBvcnQgYW5kcm9pZHguY29tcG9zZS5tYXRlcmlhbDMuTWF0ZXJpYWxUaGVtZQppbXBvcnQgYW5kcm9pZHguY29tcG9zZS5tYXRlcmlhbDMuU3dpdGNoCmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLm1hdGVyaWFsMy5UZXh0CmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLm1hdGVyaWFsMy5UZXh0QnV0dG9uCmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLnJ1bnRpbWUuQ29tcG9zYWJsZQppbXBvcnQgYW5kcm9pZHguY29tcG9zZS5ydW50aW1lLkxhdW5jaGVkRWZmZWN0CmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLnJ1bnRpbWUuZ2V0VmFsdWUKaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UucnVudGltZS5tdXRhYmxlU3RhdGVPZgppbXBvcnQgYW5kcm9pZHguY29tcG9zZS5ydW50aW1lLnJlbWVtYmVyCmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLnJ1bnRpbWUuc2V0VmFsdWUKaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UudWkuQWxpZ25tZW50CmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLnVpLk1vZGlmaWVyCmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLnVpLnVuaXQuZHAKaW1wb3J0IGFwcC5hZW11LmNvcmUuR3Vlc3RWbQoKcHJpdmF0ZSBjb25zdCB2YWwgU1dJVENIID0gIi9kYXRhL2xvY2FsL3RtcC9hZW11LXN1LW9uIgoKLyoqCiAqIE9uZSBzd2l0Y2g6IG9uID0gZXZlcnkgYXBwIGluIHRoaXMgc3lzdGVtIGdldHMgcm9vdCwgb2ZmID0gbm9uZSBkb2VzLgogKiBUaGUgZ3Vlc3QncyAvc3lzdGVtL3hiaW4vc3UgKGluc3RhbGxlZCBhdCBpbXBvcnQpIGxvb2tzIGZvciB0aGlzIGZpbGUgYmVmb3JlIGl0IGhhbmRzIG91dCByb290LgogKi8KQENvbXBvc2FibGUKZnVuIFJvb3RBY2Nlc3NEaWFsb2codm06IEd1ZXN0Vm0sIG9uRGlzbWlzczogKCkgLT4gVW5pdCkgewogICAgdmFyIG9uIGJ5IHJlbWVtYmVyIHsgbXV0YWJsZVN0YXRlT2Y8Qm9vbGVhbj8+KG51bGwpIH0KCiAgICBMYXVuY2hlZEVmZmVjdChVbml0KSB7CiAgICAgICAgdmFsIG91dCA9IHJ1bkNhdGNoaW5nIHsgdm0uZ3Vlc3RTaGVsbCgidGVzdCAtZiAkU1dJVENIICYmIGVjaG8gMSB8fCBlY2hvIDAiLCAxNV8wMDApIH0uZ2V0T3JEZWZhdWx0KCIwIikKICAgICAgICBvbiA9IG91dC50cmltKCkuY29udGFpbnMoIjEiKQogICAgfQoKICAgIEFsZXJ0RGlhbG9nKAogICAgICAgIG9uRGlzbWlzc1JlcXVlc3QgPSBvbkRpc21pc3MsCiAgICAgICAgdGl0bGUgPSB7IFRleHQoIlJvb3QgYWNjZXNzIikgfSwKICAgICAgICB0ZXh0ID0gewogICAgICAgICAgICBDb2x1bW4gewogICAgICAgICAgICAgICAgVGV4dCgKICAgICAgICAgICAgICAgICAgICAiT246IGV2ZXJ5IGFwcCBpbiB0aGlzIHN5c3RlbSBnZXRzIHJvb3QuIE9mZjogbm8gYXBwIGRvZXMuIiwKICAgICAgICAgICAgICAgICAgICBzdHlsZSA9IE1hdGVyaWFsVGhlbWUudHlwb2dyYXBoeS5ib2R5TWVkaXVtCiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICBTcGFjZXIoTW9kaWZpZXIuaGVpZ2h0KDE2LmRwKSkKICAgICAgICAgICAgICAgIFJvdyh2ZXJ0aWNhbEFsaWdubWVudCA9IEFsaWdubWVudC5DZW50ZXJWZXJ0aWNhbGx5KSB7CiAgICAgICAgICAgICAgICAgICAgU3dpdGNoKGNoZWNrZWQgPSBvbiA9PSB0cnVlLCBvbkNoZWNrZWRDaGFuZ2UgPSB7IG9uID0gaXQgfSwgZW5hYmxlZCA9IG9uICE9IG51bGwpCiAgICAgICAgICAgICAgICAgICAgU3BhY2VyKE1vZGlmaWVyLndpZHRoKDEyLmRwKSkKICAgICAgICAgICAgICAgICAgICBUZXh0KAogICAgICAgICAgICAgICAgICAgICAgICB3aGVuIChvbikgewogICAgICAgICAgICAgICAgICAgICAgICAgICAgbnVsbCAtPiAiUmVhZGluZ+KApiIKICAgICAgICAgICAgICAgICAgICAgICAgICAgIHRydWUgLT4gIlJvb3QgT04iCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBmYWxzZSAtPiAiUm9vdCBPRkYiCiAgICAgICAgICAgICAgICAgICAgICAgIH0sCiAgICAgICAgICAgICAgICAgICAgICAgIHN0eWxlID0gTWF0ZXJpYWxUaGVtZS50eXBvZ3JhcGh5LnRpdGxlTWVkaXVtCiAgICAgICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgfQogICAgICAgICAgICB9CiAgICAgICAgfSwKICAgICAgICBjb25maXJtQnV0dG9uID0gewogICAgICAgICAgICBUZXh0QnV0dG9uKG9uQ2xpY2sgPSB7CiAgICAgICAgICAgICAgICB2YWwgd2FudCA9IG9uID09IHRydWUKICAgICAgICAgICAgICAgIHZtLmd1ZXN0U2hlbGwoCiAgICAgICAgICAgICAgICAgICAgaWYgKHdhbnQpICJ0b3VjaCAkU1dJVENIOyBjaG1vZCA2NDQgJFNXSVRDSCIgZWxzZSAicm0gLWYgJFNXSVRDSCIsCiAgICAgICAgICAgICAgICAgICAgMTVfMDAwCiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICBvbkRpc21pc3MoKQogICAgICAgICAgICB9KSB7IFRleHQoIlNhdmUiKSB9CiAgICAgICAgfSwKICAgICAgICBkaXNtaXNzQnV0dG9uID0geyBUZXh0QnV0dG9uKG9uQ2xpY2sgPSBvbkRpc21pc3MpIHsgVGV4dCgiQ2FuY2VsIikgfSB9LAogICAgKQp9Cg==").decode("utf-8")
+          NEW_BLOCK = base64.b64decode("ICAgICAgICAvLyByb290OiB0aGUgZW5naW5lIGFjY2VwdHMgc2V0dWlkKCkgZnJvbSBhbnkgZ3Vlc3QgcHJvZ3JhbSwgc28gYSBwbGFpbiBzdSBiaW5hcnkgaXMgZW5vdWdoLgogICAgICAgIC8vIC9zeXN0ZW0veGJpbi9zdSBpcyBhIHN3aXRjaDogd2hpbGUgL2RhdGEvbG9jYWwvdG1wL2FlbXUtc3Utb24gZXhpc3RzIGV2ZXJ5IGFwcCBnZXRzIHJvb3QuCiAgICAgICAgcnVuQ2F0Y2hpbmcgewogICAgICAgICAgICB2YWwgYmluID0gRmlsZShyb290LCAic3lzdGVtL3hiaW4vYWVtdS1zdSIpCiAgICAgICAgICAgIGJpbi5wYXJlbnRGaWxlPy5ta2RpcnMoKQogICAgICAgICAgICBFbmdpbmVBc3NldHMub3BlbihjdHgsICJlbmdpbmVzL2NvbW1vbi9hZW11LXN1IikudXNlIHsgaSAtPiBiaW4ub3V0cHV0U3RyZWFtKCkudXNlIHsgbyAtPiBpLmNvcHlUbyhvKSB9IH0KICAgICAgICAgICAgYmluLnNldFJlYWRhYmxlKHRydWUsIGZhbHNlKQogICAgICAgICAgICBiaW4uc2V0RXhlY3V0YWJsZSh0cnVlLCBmYWxzZSkKICAgICAgICAgICAgdmFsIHNoaW0gPSBGaWxlKHJvb3QsICJzeXN0ZW0veGJpbi9zdSIpCiAgICAgICAgICAgIGlmIChzaGltLmV4aXN0cygpKSBzaGltLmRlbGV0ZSgpCiAgICAgICAgICAgIHNoaW0ud3JpdGVUZXh0KAogICAgICAgICAgICAgICAgIiMhL3N5c3RlbS9iaW4vc2hcbiIgKwogICAgICAgICAgICAgICAgICAgICJpZiBbIC1mIC9kYXRhL2xvY2FsL3RtcC9hZW11LXN1LW9uIF07IHRoZW4gZXhlYyAvc3lzdGVtL3hiaW4vYWVtdS1zdSBcIlwkQFwiOyBmaVxuIiArCiAgICAgICAgICAgICAgICAgICAgImVjaG8gXCJzdTogcm9vdCBhY2Nlc3MgaXMgc3dpdGNoZWQgb2ZmXCIgPiYyXG4iICsKICAgICAgICAgICAgICAgICAgICAiZXhpdCAxXG4iCiAgICAgICAgICAgICkKICAgICAgICAgICAgc2hpbS5zZXRSZWFkYWJsZSh0cnVlLCBmYWxzZSkKICAgICAgICAgICAgc2hpbS5zZXRFeGVjdXRhYmxlKHRydWUsIGZhbHNlKQogICAgICAgICAgICBjb3BpZWQrKwogICAgICAgIH0ub25GYWlsdXJlIHsgbG9nKCJzdTogJHtpdC5tZXNzYWdlfSIpIH0K").decode("utf-8")
+
+          open(RD, "w", encoding="utf-8").write(ROOT_DIALOG)
+          print("wrote RootDialog.kt (toggle)")
+
+          s = open(TF, encoding="utf-8").read()
+          start = s.find("        // root: the engine accepts setuid()")
+          marker = '.onFailure { log("su: ${it.message}") }'
+          end = s.find(marker, start)
+          if start < 0 or end < 0:
+              print("  TreeFixer: block not found, nothing changed")
+          else:
+              end = s.find("\n", end) + 1
+              s = s[:start] + NEW_BLOCK + s[end:]
+              open(TF, "w", encoding="utf-8").write(s)
+              print("patched TreeFixer.kt (toggle wrapper)")
+
+          PY
+
+      - name: Commit
+        run: |
+          git config user.name "root-toggle-bot"
+          git config user.email "root-toggle-bot@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "nothing to commit"
+          else
+            git commit -m "root access: single on/off switch instead of per-app list"
+            git push
+          fi
