@@ -1,4 +1,4 @@
-package com.haseeb.emulator.core
+package app.aemu.core
 
 /**
  * Набор движка: хостовые исполняемые файлы (лежат в nativeLibraryDir как lib*.so)

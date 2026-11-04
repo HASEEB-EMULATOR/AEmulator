@@ -1,4 +1,4 @@
-package com.haseeb.emulator.core
+package app.aemu.core
 
 import android.net.LocalServerSocket
 import android.net.LocalSocket

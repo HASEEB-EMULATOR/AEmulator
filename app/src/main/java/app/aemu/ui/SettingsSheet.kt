@@ -1,6 +1,6 @@
-package com.haseeb.emulator.ui
+package app.aemu.ui
 
-import com.haseeb.emulator.R
+import app.aemu.R
 import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -40,10 +40,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import com.haseeb.emulator.core.CpuInfo
-import com.haseeb.emulator.core.Engine
-import com.haseeb.emulator.core.GuestImage
-import com.haseeb.emulator.core.VmSettings
+import app.aemu.core.CpuInfo
+import app.aemu.core.Engine
+import app.aemu.core.GuestImage
+import app.aemu.core.VmSettings
 
 private data class Res(val label: String, val w: Int, val h: Int, val dpi: Int)
 
@@ -202,7 +202,7 @@ private fun NumField(label: String, value: Int, modifier: Modifier, set: (Int) -
 @Composable
 private fun RecoverySection(img: GuestImage) {
     val ctx = androidx.compose.ui.platform.LocalContext.current
-    val paths = remember(img.id) { com.haseeb.emulator.core.VmPaths(ctx, img.id) }
+    val paths = remember(img.id) { app.aemu.core.VmPaths(ctx, img.id) }
     var status by remember { mutableStateOf(recoveryStatus(paths)) }
     var busy by remember { mutableStateOf(false) }
     val failed = stringResource(R.string.vs_recovery_failed)
@@ -213,7 +213,7 @@ private fun RecoverySection(img: GuestImage) {
         Thread {
             val ok = runCatching {
                 val data = ctx.contentResolver.openInputStream(uri)!!.use { it.readBytes() }
-                com.haseeb.emulator.core.RecoveryImage.install(paths, data) {}
+                app.aemu.core.RecoveryImage.install(paths, data) {}
             }.getOrDefault(false)
             android.os.Handler(android.os.Looper.getMainLooper()).post {
                 busy = false
@@ -233,9 +233,9 @@ private fun RecoverySection(img: GuestImage) {
     )
 }
 
-private fun recoveryStatus(paths: com.haseeb.emulator.core.VmPaths): String? {
-    if (!com.haseeb.emulator.core.RecoveryImage.installed(paths)) return null
-    val dir = com.haseeb.emulator.core.RecoveryImage.dir(paths)
+private fun recoveryStatus(paths: app.aemu.core.VmPaths): String? {
+    if (!app.aemu.core.RecoveryImage.installed(paths)) return null
+    val dir = app.aemu.core.RecoveryImage.dir(paths)
     val prop = runCatching { java.io.File(dir, "default.prop").readText() }.getOrDefault("")
     val twrp = Regex("""ro\.twrp\.version=(\S+)""").find(prop)?.groupValues?.get(1)
     return when {

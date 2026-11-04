@@ -1,4 +1,4 @@
-package com.haseeb.emulator.core
+package app.aemu.core
 
 /** Сведения о телефоне-хозяине, от которых зависят обходы в движке. */
 object HostInfo {

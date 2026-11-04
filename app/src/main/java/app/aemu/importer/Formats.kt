@@ -1,4 +1,4 @@
-package com.haseeb.emulator.importer
+package app.aemu.importer
 
 import org.apache.commons.compress.compressors.lz4.BlockLZ4CompressorInputStream
 import java.io.ByteArrayInputStream

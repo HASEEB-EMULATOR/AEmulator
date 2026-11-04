@@ -1,8 +1,8 @@
-package com.haseeb.emulator
+package app.aemu
 
 import android.content.Context
 import android.content.res.Configuration
-import com.haseeb.emulator.core.VmSettings
+import app.aemu.core.VmSettings
 import java.util.Locale
 
 /** Настройки самого приложения (не отдельной системы): язык, тема, умолчания для новых систем. */

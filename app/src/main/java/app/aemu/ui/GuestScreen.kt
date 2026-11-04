@@ -1,4 +1,4 @@
-package com.haseeb.emulator.ui
+package app.aemu.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -9,7 +9,7 @@ import android.graphics.Rect
 
 import android.view.MotionEvent
 import android.view.View
-import com.haseeb.emulator.core.InputService
+import app.aemu.core.InputService
 import java.io.File
 import java.io.RandomAccessFile
 import java.nio.MappedByteBuffer

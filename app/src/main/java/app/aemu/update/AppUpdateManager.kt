@@ -1,4 +1,4 @@
-package com.haseeb.emulator.update
+package app.aemu.update
 
 import android.content.Context
 import android.content.Intent

@@ -1,4 +1,4 @@
-package com.haseeb.emulator.core
+package app.aemu.core
 
 import java.io.DataInputStream
 import java.io.File

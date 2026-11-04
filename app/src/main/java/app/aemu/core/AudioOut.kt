@@ -1,4 +1,4 @@
-package com.haseeb.emulator.core
+package app.aemu.core
 
 import android.media.AudioAttributes
 import android.media.AudioFormat

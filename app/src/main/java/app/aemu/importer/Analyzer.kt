@@ -1,12 +1,12 @@
-package com.haseeb.emulator.importer
+package app.aemu.importer
 
 import android.content.Context
-import com.haseeb.emulator.core.Engine
-import com.haseeb.emulator.core.GuestImage
-import com.haseeb.emulator.core.InitPlan
-import com.haseeb.emulator.core.PropArea
-import com.haseeb.emulator.core.VmPaths
-import com.haseeb.emulator.core.VmSettings
+import app.aemu.core.Engine
+import app.aemu.core.GuestImage
+import app.aemu.core.InitPlan
+import app.aemu.core.PropArea
+import app.aemu.core.VmPaths
+import app.aemu.core.VmSettings
 import java.io.File
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -159,7 +159,7 @@ class Analyzer(private val ctx: Context, private val paths: VmPaths, private val
                 name = img.name, settings = img.settings, createdAt = img.createdAt, sizeBytes = img.sizeBytes,
                 lastBootMs = img.lastBootMs, bootCount = img.bootCount,
             )
-            com.haseeb.emulator.core.ImageStore.save(ctx, out)
+            app.aemu.core.ImageStore.save(ctx, out)
             return out
         }
     }

@@ -1,7 +1,7 @@
-package com.haseeb.emulator
+package app.aemu
 
 import android.app.Application
-import com.haseeb.emulator.core.Keeper
+import app.aemu.core.Keeper
 
 class AemuApp : Application() {
     override fun onCreate() {

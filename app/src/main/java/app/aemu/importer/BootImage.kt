@@ -1,4 +1,4 @@
-package com.haseeb.emulator.importer
+package app.aemu.importer
 
 import org.tukaani.xz.LZMAInputStream
 import org.tukaani.xz.XZInputStream

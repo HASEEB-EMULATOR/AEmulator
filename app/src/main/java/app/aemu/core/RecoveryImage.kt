@@ -1,7 +1,7 @@
-package com.haseeb.emulator.core
+package app.aemu.core
 
 import android.system.Os
-import com.haseeb.emulator.importer.BootImage
+import app.aemu.importer.BootImage
 import java.io.File
 import java.io.RandomAccessFile
 
