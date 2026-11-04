@@ -732,7 +732,7 @@ class VmActivity : ComponentActivity() {
                         onClick = { menu = false; showLog = true })
                     DropdownMenuItem(text = { Text(stringResource(R.string.m_terminal)) }, leadingIcon = { Icon(Icons.Rounded.Code, null) },
                         enabled = running, onClick = { menu = false; showTerm = true })
-                    DropdownMenuItem(text = { Text("Root access") }, leadingIcon = { Icon(Icons.Rounded.Security, null) },
+                                        DropdownMenuItem(text = { Text("Root access") }, leadingIcon = { Icon(Icons.Rounded.Lock, null) },
                         enabled = running, onClick = { menu = false; rootDialog = true })
                     // the machine keeps running behind its notification
                     DropdownMenuItem(text = { Text(stringResource(R.string.m_minimize)) }, leadingIcon = { Icon(Icons.Rounded.Close, null) },
