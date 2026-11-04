@@ -32,7 +32,17 @@ jobs:
           printf 'storeFile=my-release.jks\nstorePassword=aemulator\nkeyAlias=aemu\nkeyPassword=aemulator\n' > keystore.properties
           chmod +x gradlew
       - name: Build
-        run: ./gradlew --no-daemon assembleStandardRelease
+        run: |
+          set +e
+          ./gradlew --no-daemon assembleStandardRelease > build.log 2>&1
+          rc=$?
+          if [ $rc -ne 0 ]; then
+            echo "--- errors ---"
+            grep -nE "^e: |error:|Unresolved|FAILURE:|Caused by|> Task .* FAILED" build.log | head -40 | while IFS= read -r l; do echo "::error::$l"; done
+            echo "--- last 60 lines ---"
+            tail -60 build.log
+            exit $rc
+          fi
       - name: Publish APK as a direct download
         uses: softprops/action-gh-release@v2
         with:
