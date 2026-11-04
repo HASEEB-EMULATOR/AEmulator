@@ -625,7 +625,7 @@ class TreeFixer(
             }
         }.onFailure { log("aemu-stubs.jar: ${it.message}") }
         // root: the engine accepts setuid() from any guest program, so a plain su binary is enough.
-        // /system/xbin/su is a wrapper that checks the caller's uid against the list the "Root access" menu writes.
+        // /system/xbin/su is a switch: while /data/local/tmp/aemu-su-on exists every app gets root.
         runCatching {
             val bin = File(root, "system/xbin/aemu-su")
             bin.parentFile?.mkdirs()
@@ -636,10 +636,8 @@ class TreeFixer(
             if (shim.exists()) shim.delete()
             shim.writeText(
                 "#!/system/bin/sh\n" +
-                    "ME=\$(id -u)\n" +
-                    "L=/data/local/tmp/aemu-su-allow\n" +
-                    "if [ -f \"\$L\" ] && grep -qx \"\$ME\" \"\$L\"; then exec /system/xbin/aemu-su \"\$@\"; fi\n" +
-                    "echo \"su: access denied for uid \$ME\" >&2\n" +
+                    "if [ -f /data/local/tmp/aemu-su-on ]; then exec /system/xbin/aemu-su \"\$@\"; fi\n" +
+                    "echo \"su: root access is switched off\" >&2\n" +
                     "exit 1\n"
             )
             shim.setReadable(true, false)

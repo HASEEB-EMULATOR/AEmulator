@@ -1,18 +1,13 @@
 package app.aemu.ui
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -26,68 +21,52 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.aemu.core.GuestVm
 
-private const val ALLOW = "/data/local/tmp/aemu-su-allow"
+private const val SWITCH = "/data/local/tmp/aemu-su-on"
 
-private data class RootApp(val pkg: String, val uid: Int)
-
+/**
+ * One switch: on = every app in this system gets root, off = none does.
+ * The guest's /system/xbin/su (installed at import) looks for this file before it hands out root.
+ */
 @Composable
 fun RootAccessDialog(vm: GuestVm, onDismiss: () -> Unit) {
-    var apps by remember { mutableStateOf<List<RootApp>>(emptyList()) }
-    var allowed by remember { mutableStateOf<Set<Int>>(emptySet()) }
-    var loading by remember { mutableStateOf(true) }
+    var on by remember { mutableStateOf<Boolean?>(null) }
 
     LaunchedEffect(Unit) {
-        val out = runCatching { vm.guestShell("pm list packages -3 -U 2>/dev/null", 40_000) }.getOrDefault("")
-        val re = Regex("package:(\\S+)\\s+uid:(\\d+)")
-        apps = out.lineSequence().mapNotNull { line ->
-            val m = re.find(line) ?: return@mapNotNull null
-            RootApp(m.groupValues[1], m.groupValues[2].toIntOrNull() ?: return@mapNotNull null)
-        }.sortedBy { it.pkg }.toList()
-        val cur = runCatching { vm.guestShell("cat $ALLOW 2>/dev/null", 10_000) }.getOrDefault("")
-        allowed = cur.lineSequence().mapNotNull { it.trim().toIntOrNull() }.toSet()
-        loading = false
+        val out = runCatching { vm.guestShell("test -f $SWITCH && echo 1 || echo 0", 15_000) }.getOrDefault("0")
+        on = out.trim().contains("1")
     }
 
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Root access") },
         text = {
-            if (loading) {
-                Text("Reading the app list from the system…")
-            } else {
-                Column(Modifier.heightIn(max = 420.dp)) {
-                    Text("Tick the apps that may use su.", style = MaterialTheme.typography.bodySmall)
-                    Spacer(Modifier.height(8.dp))
-                    if (apps.isEmpty()) {
-                        Text("No user apps installed.", style = MaterialTheme.typography.bodyMedium)
-                    }
-                    LazyColumn {
-                        items(apps) { a ->
-                            Row(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .clickable { allowed = if (a.uid in allowed) allowed - a.uid else allowed + a.uid }
-                                    .padding(vertical = 6.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Checkbox(
-                                    checked = a.uid in allowed,
-                                    onCheckedChange = { on -> allowed = if (on) allowed + a.uid else allowed - a.uid }
-                                )
-                                Column(Modifier.padding(start = 8.dp)) {
-                                    Text(a.pkg, style = MaterialTheme.typography.bodyMedium)
-                                    Text("uid ${a.uid}", style = MaterialTheme.typography.labelSmall)
-                                }
-                            }
-                        }
-                    }
+            Column {
+                Text(
+                    "On: every app in this system gets root. Off: no app does.",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Spacer(Modifier.height(16.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Switch(checked = on == true, onCheckedChange = { on = it }, enabled = on != null)
+                    Spacer(Modifier.width(12.dp))
+                    Text(
+                        when (on) {
+                            null -> "Reading…"
+                            true -> "Root ON"
+                            false -> "Root OFF"
+                        },
+                        style = MaterialTheme.typography.titleMedium
+                    )
                 }
             }
         },
         confirmButton = {
             TextButton(onClick = {
-                val body = allowed.joinToString("\n")
-                vm.guestShell("mkdir -p /data/local/tmp; printf '%s\\n' '" + body + "' > " + ALLOW + "; chmod 644 " + ALLOW, 20_000)
+                val want = on == true
+                vm.guestShell(
+                    if (want) "touch $SWITCH; chmod 644 $SWITCH" else "rm -f $SWITCH",
+                    15_000
+                )
                 onDismiss()
             }) { Text("Save") }
         },
