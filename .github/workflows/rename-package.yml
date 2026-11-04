@@ -10,8 +10,8 @@ jobs:
       - name: Replace app.aemu everywhere
         run: |
           set -e
-          grep -rl "app\.aemu" app/src app/build.gradle.kts | while read -r f; do
-            sed -i 's/app\.aemu/com.haseeb.emulator/g' "$f"
+          grep -rl "com\.haseeb.emulator" app/src app/build.gradle.kts | while read -r f; do
+            sed -i 's/com\.haseeb.emulator/app.aemu/g' "$f"
           done
           echo "--- remaining old names ---"
           grep -rn "app\.aemu" app/src app/build.gradle.kts || echo "none"
@@ -19,6 +19,6 @@ jobs:
           git config user.email "rename-bot@users.noreply.github.com"
           git add -A
           if git diff --cached --quiet; then echo "nothing to change"; else
-            git commit -m "rename package to com.haseeb.emulator"
+            git commit -m "rename package to app.aemu"
             git push
           fi
