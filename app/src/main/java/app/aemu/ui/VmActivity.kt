@@ -27,6 +27,7 @@ import androidx.compose.material.icons.rounded.Lan
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Gamepad
 import androidx.compose.material.icons.rounded.Code
+import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material.icons.rounded.History
 import androidx.compose.material.icons.automirrored.rounded.Send
 import androidx.compose.material3.AlertDialog
