@@ -213,6 +213,7 @@ class VmActivity : ComponentActivity() {
         val overlay = ComposeView(this).apply { setContent { AemuTheme(forceDark = true) { Overlay() } } }
         root.addView(overlay, FrameLayout.LayoutParams(-1, -1))
         setContentView(root)
+        hideSystemBars()
 
         // экран гостя вписываем с сохранением пропорций над панелью кнопок
         val navDp = if (!s.showNavBar) 0 else if (s.navSize == 0) 46 else 64
@@ -326,6 +327,15 @@ class VmActivity : ComponentActivity() {
         KeyEvent.KEYCODE_MENU -> InputService.KEY_MENU
         KeyEvent.KEYCODE_SEARCH -> InputService.KEY_SEARCH
         else -> null
+    }
+
+    private fun hideSystemBars() {
+        runCatching {
+            window.insetsController?.apply {
+                systemBarsBehavior = android.view.WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+                hide(android.view.WindowInsets.Type.systemBars())
+            }
+        }
     }
 
     override fun onResume() {
@@ -735,6 +745,14 @@ class VmActivity : ComponentActivity() {
                         enabled = running, onClick = { menu = false; showTerm = true })
                     DropdownMenuItem(text = { Text("Root access") }, leadingIcon = { Icon(Icons.Rounded.Tune, null) },
                         enabled = running, onClick = { menu = false; rootDialog = true })
+                    DropdownMenuItem(text = { Text("Gaming mode") },
+                        onClick = {
+                            menu = false
+                            app.aemu.core.Gaming.apply(this@VmActivity, vm.img.id)
+                            app.aemu.core.Gaming.setGpu(this@VmActivity, true)
+                            hideSystemBars()
+                            toast("Gaming preset saved - restart the system")
+                        })
                     // the machine keeps running behind its notification
                     DropdownMenuItem(text = { Text(stringResource(R.string.m_minimize)) }, leadingIcon = { Icon(Icons.Rounded.Close, null) },
                         onClick = { menu = false; moveTaskToBack(true) })
