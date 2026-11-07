@@ -688,11 +688,11 @@ class VmActivity : ComponentActivity() {
         var spoofDialog by remember { mutableStateOf(false) }
         var gamingDialog by remember { mutableStateOf(false) }
         if (gamingDialog) GamingDialog(
-            onPick = { d ->
+            onPick = { d, fps ->
                 gamingDialog = false
-                app.aemu.core.Gaming.apply(this@VmActivity, vm.img.id, d)
+                app.aemu.core.Gaming.apply(this@VmActivity, vm.img.id, d, fps)
                 hideSystemBars()
-                toast("Gaming mode: " + d.label + " - restart the system")
+                toast("Gaming mode: " + d.label + " @ " + fps + " fps - restart the system")
             },
             onDismiss = { gamingDialog = false }
         )

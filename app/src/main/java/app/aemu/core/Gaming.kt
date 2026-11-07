@@ -4,12 +4,15 @@ import android.content.Context
 
 /**
  * Gaming mode: pick a phone to imitate, then the guest runs at that phone's
- * aspect ratio (so the picture fills the screen) with its GPU identity.
+ * aspect ratio (so the picture fills the screen) and reports its identity.
+ *
+ * Hardware properties (ro.hardware.egl, ro.opengles.version, ro.kernel.qemu)
+ * are deliberately left alone: the engine serves graphics with the phone's real
+ * GPU, and lying about it makes SurfaceFlinger abort.
  */
 object Gaming {
     private const val PREFS = "aemu_gaming"
 
-    /** a phone a game can believe in: identity + the GPU it would report */
     data class Device(
         val id: String,
         val label: String,
@@ -18,7 +21,7 @@ object Gaming {
         val manufacturer: String,
         val device: String,
         val fingerprint: String,
-        val gpu: String,          // adreno | mali
+        val gpu: String,          // shown in the picker only
         val platform: String,
         val gles: String,
     )
@@ -56,17 +59,21 @@ object Gaming {
             "adreno", "sun", "196610"),
     )
 
-    fun gpuEnabled(ctx: Context): Boolean =
-        ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getBoolean("gpu", false)
+    private fun prefs(ctx: Context) = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
-    fun setGpu(ctx: Context, on: Boolean) {
-        ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putBoolean("gpu", on).apply()
-    }
+    fun gpuEnabled(ctx: Context): Boolean = prefs(ctx).getBoolean("gpu", false)
 
-    /** properties the guest reports once a gaming device has been chosen */
+    fun setGpu(ctx: Context, on: Boolean) { prefs(ctx).edit().putBoolean("gpu", on).apply() }
+
+    /** refresh rates the guest can be asked to run at */
+    val FPS = listOf(30, 45, 60, 90, 120)
+
+    fun withFps(s: VmSettings, fps: Int): VmSettings =
+        s.copy(fbHz = fps, touchHz = fps)
+
+    /** identity only — never hardware or qemu properties */
     fun props(ctx: Context): Map<String, String> {
-        val id = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getString("device", null)
-            ?: return emptyMap()
+        val id = prefs(ctx).getString("device", null) ?: return emptyMap()
         val d = DEVICES.firstOrNull { it.id == id } ?: return emptyMap()
         return mapOf(
             "ro.product.model" to d.model,
@@ -74,16 +81,10 @@ object Gaming {
             "ro.product.manufacturer" to d.manufacturer,
             "ro.product.device" to d.device,
             "ro.product.name" to d.device,
+            "ro.product.marketname" to d.label,
             "ro.build.fingerprint" to d.fingerprint,
             "ro.build.product" to d.device,
             "ro.build.device" to d.device,
-            "ro.hardware.egl" to d.gpu,
-            "ro.hardware.vulkan" to d.gpu,
-            "ro.board.platform" to d.platform,
-            "ro.opengles.version" to d.gles,
-            "ro.kernel.qemu" to "0",
-            "ro.hardware" to "qcom",
-            "ro.boot.hardware" to "qcom",
             "ro.build.tags" to "release-keys",
             "ro.debuggable" to "0",
             "ro.secure" to "1",
@@ -105,18 +106,16 @@ object Gaming {
         )
     }
 
-
-    /** settings screen: remember the phone and fit the default settings to this display */
-    fun applyDefaults(ctx: Context, s: VmSettings, device: Device): VmSettings {
-        ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
-            .putString("device", device.id).putBoolean("gpu", true).apply()
-        return fit(ctx, s)
+    fun apply(ctx: Context, imageId: String, device: Device, fps: Int = 60) {
+        prefs(ctx).edit().putString("device", device.id).putInt("fps", fps).putBoolean("gpu", true).apply()
+        ImageStore.update(ctx, imageId) { img ->
+            img.copy(settings = withFps(fit(ctx, img.settings), fps))
+        }
     }
 
-    /** apply a chosen device: remember it, fit the screen, restart needed afterwards */
-    fun apply(ctx: Context, imageId: String, device: Device) {
-        ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
-            .putString("device", device.id).putBoolean("gpu", true).apply()
-        ImageStore.update(ctx, imageId) { img -> img.copy(settings = fit(ctx, img.settings)) }
+    /** settings screen: remember the phone and fit the default settings */
+    fun applyDefaults(ctx: Context, s: VmSettings, device: Device, fps: Int = 60): VmSettings {
+        prefs(ctx).edit().putString("device", device.id).putInt("fps", fps).putBoolean("gpu", true).apply()
+        return withFps(fit(ctx, s), fps)
     }
 }

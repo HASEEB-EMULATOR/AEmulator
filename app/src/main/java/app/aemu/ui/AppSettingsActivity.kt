@@ -276,9 +276,9 @@ private fun AppSettings(onBack: () -> Unit, onRestyle: () -> Unit) {
     }
 
     if (gamingDialog) GamingDialog(
-        onPick = { d ->
+        onPick = { d, fps ->
             gamingDialog = false
-            defaults = app.aemu.core.Gaming.applyDefaults(ctx, defaults, d)
+            defaults = app.aemu.core.Gaming.applyDefaults(ctx, defaults, d, fps)
             AppPrefs.setDefaults(ctx, defaults)
         },
         onDismiss = { gamingDialog = false }
