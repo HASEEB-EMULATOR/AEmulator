@@ -1,0 +1,92 @@
+name: Gaming mode v2
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  gaming:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Apply
+        run: |
+          python3 - <<'PY'
+          import base64
+
+          CORE = "app/src/main/java/app/aemu/core/"
+          UI = "app/src/main/java/app/aemu/ui/"
+          GVM = CORE + "GuestVm.kt"
+          VM = UI + "VmActivity.kt"
+          ASA = UI + "AppSettingsActivity.kt"
+
+          open(CORE + "Gaming.kt", "w", encoding="utf-8").write(base64.b64decode("cGFja2FnZSBhcHAuYWVtdS5jb3JlCgppbXBvcnQgYW5kcm9pZC5jb250ZW50LkNvbnRleHQKCi8qKgogKiBHYW1pbmcgbW9kZTogcGljayBhIHBob25lIHRvIGltaXRhdGUsIHRoZW4gdGhlIGd1ZXN0IHJ1bnMgYXQgdGhhdCBwaG9uZSdzCiAqIGFzcGVjdCByYXRpbyAoc28gdGhlIHBpY3R1cmUgZmlsbHMgdGhlIHNjcmVlbikgd2l0aCBpdHMgR1BVIGlkZW50aXR5LgogKi8Kb2JqZWN0IEdhbWluZyB7CiAgICBwcml2YXRlIGNvbnN0IHZhbCBQUkVGUyA9ICJhZW11X2dhbWluZyIKCiAgICAvKiogYSBwaG9uZSBhIGdhbWUgY2FuIGJlbGlldmUgaW46IGlkZW50aXR5ICsgdGhlIEdQVSBpdCB3b3VsZCByZXBvcnQgKi8KICAgIGRhdGEgY2xhc3MgRGV2aWNlKAogICAgICAgIHZhbCBpZDogU3RyaW5nLAogICAgICAgIHZhbCBsYWJlbDogU3RyaW5nLAogICAgICAgIHZhbCBtb2RlbDogU3RyaW5nLAogICAgICAgIHZhbCBicmFuZDogU3RyaW5nLAogICAgICAgIHZhbCBtYW51ZmFjdHVyZXI6IFN0cmluZywKICAgICAgICB2YWwgZGV2aWNlOiBTdHJpbmcsCiAgICAgICAgdmFsIGZpbmdlcnByaW50OiBTdHJpbmcsCiAgICAgICAgdmFsIGdwdTogU3RyaW5nLCAgICAgICAgICAvLyBhZHJlbm8gfCBtYWxpCiAgICAgICAgdmFsIHBsYXRmb3JtOiBTdHJpbmcsCiAgICAgICAgdmFsIGdsZXM6IFN0cmluZywKICAgICkKCiAgICB2YWwgREVWSUNFUyA9IGxpc3RPZigKICAgICAgICBEZXZpY2UoInMyNXUiLCAiR2FsYXh5IFMyNSBVbHRyYSIsICJTTS1TOTM4QiIsICJzYW1zdW5nIiwgInNhbXN1bmciLCAiZTNxIiwKICAgICAgICAgICAgInNhbXN1bmcvZTNxeHh4L2UzcToxNS9BUDNBLjI0MDkwNS4wMTUvUzkzOEJYWFUxQVhLMTp1c2VyL3JlbGVhc2Uta2V5cyIsCiAgICAgICAgICAgICJhZHJlbm8iLCAic3VuIiwgIjE5NjYxMCIpLAogICAgICAgIERldmljZSgiczI0dSIsICJHYWxheHkgUzI0IFVsdHJhIiwgIlNNLVM5MjhCIiwgInNhbXN1bmciLCAic2Ftc3VuZyIsICJlM3EiLAogICAgICAgICAgICAic2Ftc3VuZy9lM3F4eHgvZTNxOjE0L1VQMUEuMjMxMDA1LjAwNy9TOTI4QlhYUzNBWEsxOnVzZXIvcmVsZWFzZS1rZXlzIiwKICAgICAgICAgICAgImFkcmVubyIsICJwaW5lYXBwbGUiLCAiMTk2NjEwIiksCiAgICAgICAgRGV2aWNlKCJybTEwIiwgIlJlZE1hZ2ljIDEwIFBybyIsICJOWDc4OUoiLCAibnViaWEiLCAiWlRFIiwgIk5YNzg5SiIsCiAgICAgICAgICAgICJudWJpYS9OWDc4OUovTlg3ODlKOjE1L0FRM0EuMjQwODI5LjAwMy8yMDI0MTIxODp1c2VyL3JlbGVhc2Uta2V5cyIsCiAgICAgICAgICAgICJhZHJlbm8iLCAic3VuIiwgIjE5NjYxMCIpLAogICAgICAgIERldmljZSgicm05IiwgIlJlZE1hZ2ljIDkgUHJvIiwgIk5YNzY5SiIsICJudWJpYSIsICJaVEUiLCAiTlg3NjlKIiwKICAgICAgICAgICAgIm51YmlhL05YNzY5Si9OWDc2OUo6MTQvVUtRMS4yMzEwMDMuMDAyLzIwMjQwNTIwOnVzZXIvcmVsZWFzZS1rZXlzIiwKICAgICAgICAgICAgImFkcmVubyIsICJwaW5lYXBwbGUiLCAiMTk2NjEwIiksCiAgICAgICAgRGV2aWNlKCJyb2c5IiwgIlJPRyBQaG9uZSA5IiwgIkFTVVNfQUkyNTAxIiwgImFzdXMiLCAiYXN1cyIsICJBSTI1MDEiLAogICAgICAgICAgICAiYXN1cy9XV19BSTI1MDEvQUkyNTAxOjE1L0FRM0EuMjQwODI5LjAwMy8yMDI0MTIxMDp1c2VyL3JlbGVhc2Uta2V5cyIsCiAgICAgICAgICAgICJhZHJlbm8iLCAic3VuIiwgIjE5NjYxMCIpLAogICAgICAgIERldmljZSgicm9nOCIsICJST0cgUGhvbmUgOCIsICJBU1VTX0FJMjQwMSIsICJhc3VzIiwgImFzdXMiLCAiQUkyNDAxIiwKICAgICAgICAgICAgImFzdXMvV1dfQUkyNDAxL0FJMjQwMToxNC9VS1ExLjIzMTAwMy4wMDIvMjAyNDA3MTA6dXNlci9yZWxlYXNlLWtleXMiLAogICAgICAgICAgICAiYWRyZW5vIiwgInBpbmVhcHBsZSIsICIxOTY2MTAiKSwKICAgICAgICBEZXZpY2UoImlxb28xMyIsICJpUU9PIDEzIiwgIlYyNDA4QSIsICJ2aXZvIiwgInZpdm8iLCAiVjI0MDhBIiwKICAgICAgICAgICAgInZpdm8vVjI0MDhBL1YyNDA4QToxNS9BUDNBLjI0MDkwNS4wMTUvMjAyNDEyMjA6dXNlci9yZWxlYXNlLWtleXMiLAogICAgICAgICAgICAiYWRyZW5vIiwgInN1biIsICIxOTY2MTAiKSwKICAgICAgICBEZXZpY2UoIm9wMTMiLCAiT25lUGx1cyAxMyIsICJQSloxMTAiLCAiT25lUGx1cyIsICJPbmVQbHVzIiwgIlBKWjExMCIsCiAgICAgICAgICAgICJPbmVQbHVzL1BKWjExMC9QSloxMTA6MTUvQVAzQS4yNDA5MDUuMDE1LzIwMjQxMjE1OnVzZXIvcmVsZWFzZS1rZXlzIiwKICAgICAgICAgICAgImFkcmVubyIsICJzdW4iLCAiMTk2NjEwIiksCiAgICAgICAgRGV2aWNlKCJwb2NvRjciLCAiUG9jbyBGNyBQcm8iLCAiMjQxMTdSSzJDIiwgIlhpYW9taSIsICJYaWFvbWkiLCAicmVkd29vZCIsCiAgICAgICAgICAgICJYaWFvbWkvcmVkd29vZC9yZWR3b29kOjE1L0FRM0EuMjQwODI5LjAwMy9PUzIuMC4xMC4wOnVzZXIvcmVsZWFzZS1rZXlzIiwKICAgICAgICAgICAgImFkcmVubyIsICJwaW5lYXBwbGUiLCAiMTk2NjEwIiksCiAgICAgICAgRGV2aWNlKCJ4MTUiLCAiWGlhb21pIDE1IiwgIjI0MTI5UE43NEMiLCAiWGlhb21pIiwgIlhpYW9taSIsICJkYWRhIiwKICAgICAgICAgICAgIlhpYW9taS9kYWRhL2RhZGE6MTUvQVEzQS4yNDA4MjkuMDAzL09TMi4wLjEyLjA6dXNlci9yZWxlYXNlLWtleXMiLAogICAgICAgICAgICAiYWRyZW5vIiwgInN1biIsICIxOTY2MTAiKSwKICAgICkKCiAgICBmdW4gZ3B1RW5hYmxlZChjdHg6IENvbnRleHQpOiBCb29sZWFuID0KICAgICAgICBjdHguZ2V0U2hhcmVkUHJlZmVyZW5jZXMoUFJFRlMsIENvbnRleHQuTU9ERV9QUklWQVRFKS5nZXRCb29sZWFuKCJncHUiLCBmYWxzZSkKCiAgICBmdW4gc2V0R3B1KGN0eDogQ29udGV4dCwgb246IEJvb2xlYW4pIHsKICAgICAgICBjdHguZ2V0U2hhcmVkUHJlZmVyZW5jZXMoUFJFRlMsIENvbnRleHQuTU9ERV9QUklWQVRFKS5lZGl0KCkucHV0Qm9vbGVhbigiZ3B1Iiwgb24pLmFwcGx5KCkKICAgIH0KCiAgICAvKiogcHJvcGVydGllcyB0aGUgZ3Vlc3QgcmVwb3J0cyBvbmNlIGEgZ2FtaW5nIGRldmljZSBoYXMgYmVlbiBjaG9zZW4gKi8KICAgIGZ1biBwcm9wcyhjdHg6IENvbnRleHQpOiBNYXA8U3RyaW5nLCBTdHJpbmc+IHsKICAgICAgICB2YWwgaWQgPSBjdHguZ2V0U2hhcmVkUHJlZmVyZW5jZXMoUFJFRlMsIENvbnRleHQuTU9ERV9QUklWQVRFKS5nZXRTdHJpbmcoImRldmljZSIsIG51bGwpCiAgICAgICAgICAgID86IHJldHVybiBlbXB0eU1hcCgpCiAgICAgICAgdmFsIGQgPSBERVZJQ0VTLmZpcnN0T3JOdWxsIHsgaXQuaWQgPT0gaWQgfSA/OiByZXR1cm4gZW1wdHlNYXAoKQogICAgICAgIHJldHVybiBtYXBPZigKICAgICAgICAgICAgInJvLnByb2R1Y3QubW9kZWwiIHRvIGQubW9kZWwsCiAgICAgICAgICAgICJyby5wcm9kdWN0LmJyYW5kIiB0byBkLmJyYW5kLAogICAgICAgICAgICAicm8ucHJvZHVjdC5tYW51ZmFjdHVyZXIiIHRvIGQubWFudWZhY3R1cmVyLAogICAgICAgICAgICAicm8ucHJvZHVjdC5kZXZpY2UiIHRvIGQuZGV2aWNlLAogICAgICAgICAgICAicm8ucHJvZHVjdC5uYW1lIiB0byBkLmRldmljZSwKICAgICAgICAgICAgInJvLmJ1aWxkLmZpbmdlcnByaW50IiB0byBkLmZpbmdlcnByaW50LAogICAgICAgICAgICAicm8uYnVpbGQucHJvZHVjdCIgdG8gZC5kZXZpY2UsCiAgICAgICAgICAgICJyby5idWlsZC5kZXZpY2UiIHRvIGQuZGV2aWNlLAogICAgICAgICAgICAicm8uaGFyZHdhcmUuZWdsIiB0byBkLmdwdSwKICAgICAgICAgICAgInJvLmhhcmR3YXJlLnZ1bGthbiIgdG8gZC5ncHUsCiAgICAgICAgICAgICJyby5ib2FyZC5wbGF0Zm9ybSIgdG8gZC5wbGF0Zm9ybSwKICAgICAgICAgICAgInJvLm9wZW5nbGVzLnZlcnNpb24iIHRvIGQuZ2xlcywKICAgICAgICAgICAgInJvLmtlcm5lbC5xZW11IiB0byAiMCIsCiAgICAgICAgICAgICJyby5oYXJkd2FyZSIgdG8gInFjb20iLAogICAgICAgICAgICAicm8uYm9vdC5oYXJkd2FyZSIgdG8gInFjb20iLAogICAgICAgICAgICAicm8uYnVpbGQudGFncyIgdG8gInJlbGVhc2Uta2V5cyIsCiAgICAgICAgICAgICJyby5kZWJ1Z2dhYmxlIiB0byAiMCIsCiAgICAgICAgICAgICJyby5zZWN1cmUiIHRvICIxIiwKICAgICAgICApCiAgICB9CgogICAgLyoqIHRoZSBndWVzdCBydW5zIGF0IHRoZSBob3N0J3MgYXNwZWN0IHJhdGlvLCBzbyB0aGUgcGljdHVyZSBmaWxscyB0aGUgc2NyZWVuICovCiAgICBmdW4gZml0KGN0eDogQ29udGV4dCwgczogVm1TZXR0aW5ncyk6IFZtU2V0dGluZ3MgewogICAgICAgIHZhbCBkbSA9IGN0eC5yZXNvdXJjZXMuZGlzcGxheU1ldHJpY3MKICAgICAgICB2YWwgdyA9IDM2MAogICAgICAgIHZhbCBoID0gKHcgKiBkbS5oZWlnaHRQaXhlbHMudG9GbG9hdCgpIC8gZG0ud2lkdGhQaXhlbHMpLnRvSW50KCkuY29lcmNlQXRMZWFzdCg2NDApCiAgICAgICAgcmV0dXJuIHMuY29weSgKICAgICAgICAgICAgd2lkdGggPSB3LCBoZWlnaHQgPSBoLCBkZW5zaXR5ID0gMTYwLAogICAgICAgICAgICBncHUgPSB0cnVlLCBod3VpID0gdHJ1ZSwgaml0ID0gdHJ1ZSwKICAgICAgICAgICAgcmFtTWIgPSAyMDQ4LCBsb3dSYW0gPSBmYWxzZSwKICAgICAgICAgICAgZmJIeiA9IDYwLCB0b3VjaEh6ID0gNjAsCiAgICAgICAgICAgIHNob3dOYXZCYXIgPSBmYWxzZSwKICAgICAgICAgICAga2VlcFNjcmVlbk9uID0gdHJ1ZSwKICAgICAgICApCiAgICB9CgoKICAgIC8qKiBzZXR0aW5ncyBzY3JlZW46IHJlbWVtYmVyIHRoZSBwaG9uZSBhbmQgZml0IHRoZSBkZWZhdWx0IHNldHRpbmdzIHRvIHRoaXMgZGlzcGxheSAqLwogICAgZnVuIGFwcGx5RGVmYXVsdHMoY3R4OiBDb250ZXh0LCBzOiBWbVNldHRpbmdzLCBkZXZpY2U6IERldmljZSk6IFZtU2V0dGluZ3MgewogICAgICAgIGN0eC5nZXRTaGFyZWRQcmVmZXJlbmNlcyhQUkVGUywgQ29udGV4dC5NT0RFX1BSSVZBVEUpLmVkaXQoKQogICAgICAgICAgICAucHV0U3RyaW5nKCJkZXZpY2UiLCBkZXZpY2UuaWQpLnB1dEJvb2xlYW4oImdwdSIsIHRydWUpLmFwcGx5KCkKICAgICAgICByZXR1cm4gZml0KGN0eCwgcykKICAgIH0KCiAgICAvKiogYXBwbHkgYSBjaG9zZW4gZGV2aWNlOiByZW1lbWJlciBpdCwgZml0IHRoZSBzY3JlZW4sIHJlc3RhcnQgbmVlZGVkIGFmdGVyd2FyZHMgKi8KICAgIGZ1biBhcHBseShjdHg6IENvbnRleHQsIGltYWdlSWQ6IFN0cmluZywgZGV2aWNlOiBEZXZpY2UpIHsKICAgICAgICBjdHguZ2V0U2hhcmVkUHJlZmVyZW5jZXMoUFJFRlMsIENvbnRleHQuTU9ERV9QUklWQVRFKS5lZGl0KCkKICAgICAgICAgICAgLnB1dFN0cmluZygiZGV2aWNlIiwgZGV2aWNlLmlkKS5wdXRCb29sZWFuKCJncHUiLCB0cnVlKS5hcHBseSgpCiAgICAgICAgSW1hZ2VTdG9yZS51cGRhdGUoY3R4LCBpbWFnZUlkKSB7IGltZyAtPiBpbWcuY29weShzZXR0aW5ncyA9IGZpdChjdHgsIGltZy5zZXR0aW5ncykpIH0KICAgIH0KfQo=").decode("utf-8"))
+          open(UI + "GamingDialog.kt", "w", encoding="utf-8").write(base64.b64decode("cGFja2FnZSBhcHAuYWVtdS51aQoKaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UuZm91bmRhdGlvbi5jbGlja2FibGUKaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UuZm91bmRhdGlvbi5sYXlvdXQuQ29sdW1uCmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLmZvdW5kYXRpb24ubGF5b3V0LmZpbGxNYXhXaWR0aAppbXBvcnQgYW5kcm9pZHguY29tcG9zZS5mb3VuZGF0aW9uLmxheW91dC5oZWlnaHRJbgppbXBvcnQgYW5kcm9pZHguY29tcG9zZS5mb3VuZGF0aW9uLmxheW91dC5wYWRkaW5nCmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLmZvdW5kYXRpb24ucmVtZW1iZXJTY3JvbGxTdGF0ZQppbXBvcnQgYW5kcm9pZHguY29tcG9zZS5mb3VuZGF0aW9uLnZlcnRpY2FsU2Nyb2xsCmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLm1hdGVyaWFsMy5BbGVydERpYWxvZwppbXBvcnQgYW5kcm9pZHguY29tcG9zZS5tYXRlcmlhbDMuSG9yaXpvbnRhbERpdmlkZXIKaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UubWF0ZXJpYWwzLk1hdGVyaWFsVGhlbWUKaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UubWF0ZXJpYWwzLlRleHQKaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UubWF0ZXJpYWwzLlRleHRCdXR0b24KaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UucnVudGltZS5Db21wb3NhYmxlCmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLnVpLk1vZGlmaWVyCmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLnVpLnVuaXQuZHAKaW1wb3J0IGFwcC5hZW11LmNvcmUuR2FtaW5nCgovKioKICogUGljayB0aGUgcGhvbmUgdGhlIGd1ZXN0IHNob3VsZCBwcmV0ZW5kIHRvIGJlLiBDaG9vc2luZyBvbmUgYWxzbyBmaXRzIHRoZQogKiBndWVzdCBzY3JlZW4gdG8gdGhlIGhvc3QgZGlzcGxheSwgc28gbm90aGluZyBpcyBsZXR0ZXJib3hlZC4KICovCkBDb21wb3NhYmxlCmZ1biBHYW1pbmdEaWFsb2cob25QaWNrOiAoR2FtaW5nLkRldmljZSkgLT4gVW5pdCwgb25EaXNtaXNzOiAoKSAtPiBVbml0KSB7CiAgICBBbGVydERpYWxvZygKICAgICAgICBvbkRpc21pc3NSZXF1ZXN0ID0gb25EaXNtaXNzLAogICAgICAgIHRpdGxlID0geyBUZXh0KCJHYW1pbmcgbW9kZSIpIH0sCiAgICAgICAgdGV4dCA9IHsKICAgICAgICAgICAgQ29sdW1uKE1vZGlmaWVyLmhlaWdodEluKG1heCA9IDQ2MC5kcCkudmVydGljYWxTY3JvbGwocmVtZW1iZXJTY3JvbGxTdGF0ZSgpKSkgewogICAgICAgICAgICAgICAgVGV4dCgKICAgICAgICAgICAgICAgICAgICAiUGljayBhIHBob25lLiBUaGUgc2NyZWVuIGlzIGZpdHRlZCB0byB5b3Vycywgc28gaXQgZmlsbHMgdGhlIGRpc3BsYXkuIiwKICAgICAgICAgICAgICAgICAgICBzdHlsZSA9IE1hdGVyaWFsVGhlbWUudHlwb2dyYXBoeS5ib2R5U21hbGwsCiAgICAgICAgICAgICAgICAgICAgbW9kaWZpZXIgPSBNb2RpZmllci5wYWRkaW5nKGJvdHRvbSA9IDEwLmRwKQogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgR2FtaW5nLkRFVklDRVMuZm9yRWFjaCB7IGQgLT4KICAgICAgICAgICAgICAgICAgICBDb2x1bW4oCiAgICAgICAgICAgICAgICAgICAgICAgIE1vZGlmaWVyCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAuZmlsbE1heFdpZHRoKCkKICAgICAgICAgICAgICAgICAgICAgICAgICAgIC5jbGlja2FibGUgeyBvblBpY2soZCkgfQogICAgICAgICAgICAgICAgICAgICAgICAgICAgLnBhZGRpbmcodmVydGljYWwgPSAxMC5kcCwgaG9yaXpvbnRhbCA9IDQuZHApCiAgICAgICAgICAgICAgICAgICAgKSB7CiAgICAgICAgICAgICAgICAgICAgICAgIFRleHQoZC5sYWJlbCwgc3R5bGUgPSBNYXRlcmlhbFRoZW1lLnR5cG9ncmFwaHkudGl0bGVNZWRpdW0pCiAgICAgICAgICAgICAgICAgICAgICAgIFRleHQoCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBkLm1vZGVsICsgIiDCtyAiICsgZC5ncHUudXBwZXJjYXNlKCkgKyAiIMK3ICIgKyBkLnBsYXRmb3JtLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgc3R5bGUgPSBNYXRlcmlhbFRoZW1lLnR5cG9ncmFwaHkuYm9keVNtYWxsCiAgICAgICAgICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICAgICAgSG9yaXpvbnRhbERpdmlkZXIoKQogICAgICAgICAgICAgICAgfQogICAgICAgICAgICB9CiAgICAgICAgfSwKICAgICAgICBjb25maXJtQnV0dG9uID0geyBUZXh0QnV0dG9uKG9uQ2xpY2sgPSBvbkRpc21pc3MpIHsgVGV4dCgiQ2FuY2VsIikgfSB9LAogICAgKQp9Cg==").decode("utf-8"))
+          print("wrote Gaming.kt + GamingDialog.kt")
+
+          ASA_STATE = base64.b64decode("ICAgIHZhciBnYW1pbmdEaWFsb2cgYnkgcmVtZW1iZXIgeyBtdXRhYmxlU3RhdGVPZihmYWxzZSkgfQo=").decode("utf-8")
+          ASA_ROW = base64.b64decode("ICAgICAgICAgICAgICAgICAgICBhbmRyb2lkeC5jb21wb3NlLm1hdGVyaWFsMy5PdXRsaW5lZEJ1dHRvbigKICAgICAgICAgICAgICAgICAgICAgICAgb25DbGljayA9IHsgZ2FtaW5nRGlhbG9nID0gdHJ1ZSB9LAogICAgICAgICAgICAgICAgICAgICAgICBtb2RpZmllciA9IGFuZHJvaWR4LmNvbXBvc2UudWkuTW9kaWZpZXIucGFkZGluZyh0b3AgPSA4LmRwKQogICAgICAgICAgICAgICAgICAgICkgeyBUZXh0KCJHYW1pbmcgbW9kZSAtIHBpY2sgYSBwaG9uZSwgZml0IHRoZSBzY3JlZW4iKSB9Cg==").decode("utf-8")
+          ASA_DLG = base64.b64decode("ICAgIGlmIChnYW1pbmdEaWFsb2cpIEdhbWluZ0RpYWxvZygKICAgICAgICBvblBpY2sgPSB7IGQgLT4KICAgICAgICAgICAgZ2FtaW5nRGlhbG9nID0gZmFsc2UKICAgICAgICAgICAgZGVmYXVsdHMgPSBhcHAuYWVtdS5jb3JlLkdhbWluZy5hcHBseURlZmF1bHRzKGN0eCwgZGVmYXVsdHMsIGQpCiAgICAgICAgICAgIEFwcFByZWZzLnNldERlZmF1bHRzKGN0eCwgZGVmYXVsdHMpCiAgICAgICAgfSwKICAgICAgICBvbkRpc21pc3MgPSB7IGdhbWluZ0RpYWxvZyA9IGZhbHNlIH0KICAgICkKCg==").decode("utf-8")
+
+          def sub(path, old, new, tag):
+              s = open(path, encoding="utf-8").read()
+              if tag in s:
+                  print("  already:", tag); return
+              if old not in s:
+                  print("  OLD NOT FOUND in", path); return
+              s = s.replace(old, new, 1)
+              open(path, "w", encoding="utf-8").write(s)
+              print("  patched:", tag)
+
+          # GuestVm: guest reports the picked phone
+          OLD_GVM = '        if (Gaming.gpuEnabled(ctx)) runCatching { Gaming.gpuProps().forEach { (k, v) -> overrides[k] = v } }\n'
+          NEW_GVM = '        // gaming mode: the phone picked in Gaming mode\n        runCatching { Gaming.props(ctx).forEach { (k, v) -> overrides[k] = v } }\n'
+          sub(GVM, OLD_GVM, NEW_GVM, "Gaming.props(ctx)")
+
+          # VmActivity: menu entry opens the picker
+          OLD_MENU = """                    DropdownMenuItem(text = { Text("Gaming mode") },
+                                  onClick = {
+                                      menu = false
+                                      app.aemu.core.Gaming.apply(this@VmActivity, vm.img.id)
+                                      app.aemu.core.Gaming.setGpu(this@VmActivity, true)
+                                      hideSystemBars()
+                                      toast("Gaming preset saved - restart the system")
+                                  })
+          """
+          NEW_MENU = '                    DropdownMenuItem(text = { Text("Gaming mode") },\n                        onClick = { menu = false; gamingDialog = true })\n'
+          sub(VM, OLD_MENU, NEW_MENU, "gamingDialog = true")
+
+          OLD_STATE = '        var spoofDialog by remember { mutableStateOf(false) }\n'
+          NEW_STATE = (OLD_STATE +
+              '        var gamingDialog by remember { mutableStateOf(false) }\n'
+              '        if (gamingDialog) GamingDialog(\n'
+              '            onPick = { d ->\n'
+              '                gamingDialog = false\n'
+              '                app.aemu.core.Gaming.apply(this@VmActivity, vm.img.id, d)\n'
+              '                hideSystemBars()\n'
+              '                toast("Gaming mode: " + d.label + " - restart the system")\n'
+              '            },\n'
+              '            onDismiss = { gamingDialog = false }\n'
+              '        )\n')
+          sub(VM, OLD_STATE, NEW_STATE, "var gamingDialog")
+
+          # Settings screen: state, button in the defaults section, dialog
+          sub(ASA, '    var langDialog by remember { mutableStateOf(false) }\n',
+                  '    var langDialog by remember { mutableStateOf(false) }\n' + ASA_STATE, "var gamingDialog by remember")
+
+          sub(ASA, '                    fun set(s: app.aemu.core.VmSettings) { defaults = s; AppPrefs.setDefaults(ctx, s) }\n',
+                  '                    fun set(s: app.aemu.core.VmSettings) { defaults = s; AppPrefs.setDefaults(ctx, s) }\n' + ASA_ROW,
+                  'Gaming mode - pick a phone')
+
+          sub(ASA, '    if (langDialog) {\n', ASA_DLG + '    if (langDialog) {\n', 'if (gamingDialog) GamingDialog')
+
+          PY
+
+      - name: Commit
+        run: |
+          git config user.name "gaming-bot"
+          git config user.email "gaming-bot@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then echo "nothing to commit"; else
+            git commit -m "gaming mode: device picker, screen fit, settings entry"
+            git push
+          fi
