@@ -686,6 +686,16 @@ class VmActivity : ComponentActivity() {
         var menu by remember { mutableStateOf(false) }
         var rootDialog by remember { mutableStateOf(false) }
         var spoofDialog by remember { mutableStateOf(false) }
+        var gamingDialog by remember { mutableStateOf(false) }
+        if (gamingDialog) GamingDialog(
+            onPick = { d ->
+                gamingDialog = false
+                app.aemu.core.Gaming.apply(this@VmActivity, vm.img.id, d)
+                hideSystemBars()
+                toast("Gaming mode: " + d.label + " - restart the system")
+            },
+            onDismiss = { gamingDialog = false }
+        )
         if (spoofDialog) SpoofDialog { spoofDialog = false }
         if (rootDialog) RootAccessDialog(vm) { rootDialog = false }
         var dialog by remember { mutableStateOf(Dlg.NONE) }
@@ -750,13 +760,7 @@ class VmActivity : ComponentActivity() {
                     DropdownMenuItem(text = { Text("Device identity") },
                         enabled = running, onClick = { menu = false; spoofDialog = true })
                     DropdownMenuItem(text = { Text("Gaming mode") },
-                        onClick = {
-                            menu = false
-                            app.aemu.core.Gaming.apply(this@VmActivity, vm.img.id)
-                            app.aemu.core.Gaming.setGpu(this@VmActivity, true)
-                            hideSystemBars()
-                            toast("Gaming preset saved - restart the system")
-                        })
+                        onClick = { menu = false; gamingDialog = true })
                     // the machine keeps running behind its notification
                     DropdownMenuItem(text = { Text(stringResource(R.string.m_minimize)) }, leadingIcon = { Icon(Icons.Rounded.Close, null) },
                         onClick = { menu = false; moveTaskToBack(true) })
