@@ -441,6 +441,8 @@ class GuestVm(val ctx: Context, val img: GuestImage) {
         }
         // gaming mode: report a Snapdragon GPU so games take their ES 3.x path
         if (Gaming.gpuEnabled(ctx)) runCatching { Gaming.gpuProps().forEach { (k, v) -> overrides[k] = v } }
+        // device identity: written by the "Device identity" menu
+        runCatching { Spoof.map(ctx).forEach { (k, v) -> overrides[k] = v } }
         if (!props.prepare(overrides, later, if (engine == Engine.N64) kernel.propAreaSize else PropArea.SIZE)) error("property area not ready")
         fixer.skipPreBoot(props)
         fixer.noScreenSleep()

@@ -685,6 +685,8 @@ class VmActivity : ComponentActivity() {
         var showTerm by remember { mutableStateOf(false) }
         var menu by remember { mutableStateOf(false) }
         var rootDialog by remember { mutableStateOf(false) }
+        var spoofDialog by remember { mutableStateOf(false) }
+        if (spoofDialog) SpoofDialog { spoofDialog = false }
         if (rootDialog) RootAccessDialog(vm) { rootDialog = false }
         var dialog by remember { mutableStateOf(Dlg.NONE) }
         // recovery is "running" too, but has no Android behind am/pm/settings
@@ -745,6 +747,8 @@ class VmActivity : ComponentActivity() {
                         enabled = running, onClick = { menu = false; showTerm = true })
                     DropdownMenuItem(text = { Text("Root access") }, leadingIcon = { Icon(Icons.Rounded.Tune, null) },
                         enabled = running, onClick = { menu = false; rootDialog = true })
+                    DropdownMenuItem(text = { Text("Device identity") },
+                        enabled = running, onClick = { menu = false; spoofDialog = true })
                     DropdownMenuItem(text = { Text("Gaming mode") },
                         onClick = {
                             menu = false
