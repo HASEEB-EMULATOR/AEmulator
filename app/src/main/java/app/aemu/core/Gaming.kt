@@ -105,6 +105,14 @@ object Gaming {
         )
     }
 
+
+    /** settings screen: remember the phone and fit the default settings to this display */
+    fun applyDefaults(ctx: Context, s: VmSettings, device: Device): VmSettings {
+        ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
+            .putString("device", device.id).putBoolean("gpu", true).apply()
+        return fit(ctx, s)
+    }
+
     /** apply a chosen device: remember it, fit the screen, restart needed afterwards */
     fun apply(ctx: Context, imageId: String, device: Device) {
         ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()

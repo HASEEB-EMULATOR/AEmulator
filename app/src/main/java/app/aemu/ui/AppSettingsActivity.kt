@@ -115,6 +115,7 @@ private fun AppSettings(onBack: () -> Unit, onRestyle: () -> Unit) {
     val ctx = LocalContext.current
     val scroll = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     var langDialog by remember { mutableStateOf(false) }
+    var gamingDialog by remember { mutableStateOf(false) }
     var defaults by remember { mutableStateOf(AppPrefs.defaults(ctx)) }
     var theme by remember { mutableStateOf(AppPrefs.theme(ctx)) }
     var dynamic by remember { mutableStateOf(AppPrefs.dynamicColor(ctx)) }
@@ -243,6 +244,10 @@ private fun AppSettings(onBack: () -> Unit, onRestyle: () -> Unit) {
             item {
                 Section(stringResource(R.string.as_defaults), stringResource(R.string.as_defaults_sub)) {
                     fun set(s: app.aemu.core.VmSettings) { defaults = s; AppPrefs.setDefaults(ctx, s) }
+                    androidx.compose.material3.OutlinedButton(
+                        onClick = { gamingDialog = true },
+                        modifier = androidx.compose.ui.Modifier.padding(top = 8.dp)
+                    ) { Text("Gaming mode - pick a phone, fit the screen") }
                     Toggle(stringResource(R.string.vs_gpu), stringResource(R.string.vs_gpu_sub), defaults.gpu) { set(defaults.copy(gpu = it)) }
                     Toggle(stringResource(R.string.vs_jit), stringResource(R.string.vs_jit_sub), defaults.jit) { set(defaults.copy(jit = it)) }
                     Toggle(stringResource(R.string.vs_proxy), stringResource(R.string.vs_proxy_sub), defaults.netProxy) { set(defaults.copy(netProxy = it)) }
@@ -269,6 +274,15 @@ private fun AppSettings(onBack: () -> Unit, onRestyle: () -> Unit) {
             }
         }
     }
+
+    if (gamingDialog) GamingDialog(
+        onPick = { d ->
+            gamingDialog = false
+            defaults = app.aemu.core.Gaming.applyDefaults(ctx, defaults, d)
+            AppPrefs.setDefaults(ctx, defaults)
+        },
+        onDismiss = { gamingDialog = false }
+    )
 
     if (langDialog) {
         AlertDialog(
