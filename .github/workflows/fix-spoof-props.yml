@@ -1,0 +1,32 @@
+name: Fix spoof props
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Rewrite Spoof.kt
+        run: |
+          python3 - <<'PY'
+          import base64
+          CORE = "app/src/main/java/app/aemu/core/"
+          open(CORE + "Spoof.kt", "w", encoding="utf-8").write(base64.b64decode("cGFja2FnZSBhcHAuYWVtdS5jb3JlCgppbXBvcnQgYW5kcm9pZC5jb250ZW50LkNvbnRleHQKCi8qKgogKiBEZXZpY2UgaWRlbnRpdHkgd3JpdHRlbiBpbnRvIHRoZSBndWVzdCdzIHByb3BlcnR5IGFyZWEgYXQgZXZlcnkgYm9vdC4KICogQW4gZW1wdHkgbWFwIGxlYXZlcyB0aGUgZmlybXdhcmUncyBvd24gdmFsdWVzIHVudG91Y2hlZC4KICovCm9iamVjdCBTcG9vZiB7CiAgICBwcml2YXRlIGNvbnN0IHZhbCBGSUxFID0gImFlbXVfc3Bvb2YiCgogICAgdmFsIEtFWVMgPSBsaXN0T2YoCiAgICAgICAgInJvLnByb2R1Y3QubW9kZWwiLCAicm8ucHJvZHVjdC5icmFuZCIsICJyby5wcm9kdWN0Lm1hbnVmYWN0dXJlciIsCiAgICAgICAgInJvLnByb2R1Y3QuZGV2aWNlIiwgInJvLnByb2R1Y3QubmFtZSIsICJyby5wcm9kdWN0Lm1hcmtldG5hbWUiLAogICAgICAgICJyby5idWlsZC5maW5nZXJwcmludCIsICJyby5idWlsZC5wcm9kdWN0IiwgInJvLmJ1aWxkLmRldmljZSIsCiAgICAgICAgInJvLmJ1aWxkLnRhZ3MiLCAicm8uZGVidWdnYWJsZSIsICJyby5zZWN1cmUiCiAgICApCgogICAgZnVuIG1hcChjdHg6IENvbnRleHQpOiBNYXA8U3RyaW5nLCBTdHJpbmc+IHsKICAgICAgICB2YWwgc3AgPSBjdHguZ2V0U2hhcmVkUHJlZmVyZW5jZXMoRklMRSwgQ29udGV4dC5NT0RFX1BSSVZBVEUpCiAgICAgICAgdmFsIG91dCA9IExpbmtlZEhhc2hNYXA8U3RyaW5nLCBTdHJpbmc+KCkKICAgICAgICBmb3IgKGsgaW4gS0VZUykgc3AuZ2V0U3RyaW5nKGssIG51bGwpPy50YWtlSWYgeyBpdC5pc05vdEJsYW5rKCkgfT8ubGV0IHsgb3V0W2tdID0gaXQgfQogICAgICAgIHJldHVybiBvdXQKICAgIH0KCiAgICBmdW4gc2V0KGN0eDogQ29udGV4dCwgdmFsdWVzOiBNYXA8U3RyaW5nLCBTdHJpbmc+KSB7CiAgICAgICAgdmFsIGUgPSBjdHguZ2V0U2hhcmVkUHJlZmVyZW5jZXMoRklMRSwgQ29udGV4dC5NT0RFX1BSSVZBVEUpLmVkaXQoKQogICAgICAgIGZvciAoayBpbiBLRVlTKSB7CiAgICAgICAgICAgIHZhbCB2ID0gdmFsdWVzW2tdPy50cmltKCkKICAgICAgICAgICAgaWYgKHYuaXNOdWxsT3JFbXB0eSgpKSBlLnJlbW92ZShrKSBlbHNlIGUucHV0U3RyaW5nKGssIHYpCiAgICAgICAgfQogICAgICAgIGUuYXBwbHkoKQogICAgfQoKICAgIGZ1biBjbGVhcihjdHg6IENvbnRleHQpIHsKICAgICAgICBjdHguZ2V0U2hhcmVkUHJlZmVyZW5jZXMoRklMRSwgQ29udGV4dC5NT0RFX1BSSVZBVEUpLmVkaXQoKS5jbGVhcigpLmFwcGx5KCkKICAgIH0KCiAgICAvKiogcmVhZHktbWFkZSBpZGVudGl0aWVzOiBvbmUgdGFwIGFuZCB0aGUgZ3Vlc3Qgc3RvcHMgbG9va2luZyBsaWtlIHRoaXMgcGhvbmUgKi8KICAgIGZ1biBwcmVzZXQobmFtZTogU3RyaW5nKTogTWFwPFN0cmluZywgU3RyaW5nPiA9IHdoZW4gKG5hbWUpIHsKICAgICAgICAicGl4ZWw3IiAtPiBtYXBPZigKICAgICAgICAgICAgInJvLnByb2R1Y3QubW9kZWwiIHRvICJQaXhlbCA3IiwKICAgICAgICAgICAgInJvLnByb2R1Y3QuYnJhbmQiIHRvICJnb29nbGUiLAogICAgICAgICAgICAicm8ucHJvZHVjdC5tYW51ZmFjdHVyZXIiIHRvICJHb29nbGUiLAogICAgICAgICAgICAicm8ucHJvZHVjdC5kZXZpY2UiIHRvICJwYW50aGVyIiwKICAgICAgICAgICAgInJvLnByb2R1Y3QubmFtZSIgdG8gInBhbnRoZXIiLAogICAgICAgICAgICAicm8ucHJvZHVjdC5tYXJrZXRuYW1lIiB0byAiUGl4ZWwgNyIsCiAgICAgICAgICAgICJyby5idWlsZC5maW5nZXJwcmludCIgdG8gImdvb2dsZS9wYW50aGVyL3BhbnRoZXI6MTQvVVExQS4yNDAyMDUuMDA0LzExMjY5NzUxOnVzZXIvcmVsZWFzZS1rZXlzIiwKICAgICAgICAgICAgInJvLmJ1aWxkLnByb2R1Y3QiIHRvICJwYW50aGVyIiwKICAgICAgICAgICAgInJvLmJ1aWxkLmRldmljZSIgdG8gInBhbnRoZXIiLAogICAgICAgICAgICAicm8uYnVpbGQudGFncyIgdG8gInJlbGVhc2Uta2V5cyIsCiAgICAgICAgICAgICJyby5kZWJ1Z2dhYmxlIiB0byAiMCIsCiAgICAgICAgICAgICJyby5zZWN1cmUiIHRvICIxIgogICAgICAgICkKICAgICAgICAiczIzIiAtPiBtYXBPZigKICAgICAgICAgICAgInJvLnByb2R1Y3QubW9kZWwiIHRvICJTTS1TOTExQiIsCiAgICAgICAgICAgICJyby5wcm9kdWN0LmJyYW5kIiB0byAic2Ftc3VuZyIsCiAgICAgICAgICAgICJyby5wcm9kdWN0Lm1hbnVmYWN0dXJlciIgdG8gInNhbXN1bmciLAogICAgICAgICAgICAicm8ucHJvZHVjdC5kZXZpY2UiIHRvICJkbTFxIiwKICAgICAgICAgICAgInJvLnByb2R1Y3QubmFtZSIgdG8gImRtMXF4eCIsCiAgICAgICAgICAgICJyby5wcm9kdWN0Lm1hcmtldG5hbWUiIHRvICJHYWxheHkgUzIzIiwKICAgICAgICAgICAgInJvLmJ1aWxkLmZpbmdlcnByaW50IiB0byAic2Ftc3VuZy9kbTFxeHgvZG0xcToxNC9VUDFBLjIzMTAwNS4wMDcvUzkxMUJYWFMzQVdMTTp1c2VyL3JlbGVhc2Uta2V5cyIsCiAgICAgICAgICAgICJyby5idWlsZC5wcm9kdWN0IiB0byAiZG0xcSIsCiAgICAgICAgICAgICJyby5idWlsZC5kZXZpY2UiIHRvICJkbTFxIiwKICAgICAgICAgICAgInJvLmJ1aWxkLnRhZ3MiIHRvICJyZWxlYXNlLWtleXMiLAogICAgICAgICAgICAicm8uZGVidWdnYWJsZSIgdG8gIjAiLAogICAgICAgICAgICAicm8uc2VjdXJlIiB0byAiMSIKICAgICAgICApCiAgICAgICAgZWxzZSAtPiBlbXB0eU1hcCgpCiAgICB9Cn0K").decode("utf-8"))
+          print("rewrote Spoof.kt (identity only)")
+          s = open(CORE + "Spoof.kt", encoding="utf-8").read()
+          bad = [k for k in ["ro.hardware", "ro.kernel.qemu", "ro.boot.hardware", "ro.opengles.version"] if ('"' + k + '"') in s]
+          print("hardware props left:", bad if bad else "none")
+
+          PY
+
+      - name: Commit
+        run: |
+          git config user.name "fix-bot"
+          git config user.email "fix-bot@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then echo "nothing to commit"; else
+            git commit -m "device identity: identity props only, leave hardware alone"
+            git push
+          fi
