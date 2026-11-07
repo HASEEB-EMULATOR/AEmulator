@@ -1,0 +1,62 @@
+name: Add gaming mode
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  gaming:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Apply
+        run: |
+          python3 - <<'PY'
+          import base64
+
+          GAME = "app/src/main/java/app/aemu/core/Gaming.kt"
+          GVM = "app/src/main/java/app/aemu/core/GuestVm.kt"
+          VM = "app/src/main/java/app/aemu/ui/VmActivity.kt"
+
+          open(GAME, "w", encoding="utf-8").write(base64.b64decode("cGFja2FnZSBhcHAuYWVtdS5jb3JlCgppbXBvcnQgYW5kcm9pZC5jb250ZW50LkNvbnRleHQKCi8qKgogKiBPbmUtdGFwIGdhbWluZyBzZXR1cDogYSBzbWFsbCBzY3JlZW4sIG5vIGd1ZXN0IG5hdmlnYXRpb24gYmFyLCBhbmQgdGhlIEdQVQogKiBpZGVudGl0eSBnYW1lcyBleHBlY3QgZnJvbSBhIFNuYXBkcmFnb24gcGhvbmUuCiAqLwpvYmplY3QgR2FtaW5nIHsKICAgIHByaXZhdGUgY29uc3QgdmFsIFBSRUZTID0gImFlbXVfZ2FtaW5nIgoKICAgIGZ1biBwcmVzZXQoczogVm1TZXR0aW5ncyk6IFZtU2V0dGluZ3MgPSBzLmNvcHkoCiAgICAgICAgd2lkdGggPSAzNjAsIGhlaWdodCA9IDgwMCwgZGVuc2l0eSA9IDE2MCwKICAgICAgICBncHUgPSB0cnVlLCBod3VpID0gdHJ1ZSwgaml0ID0gdHJ1ZSwKICAgICAgICByYW1NYiA9IDIwNDgsIGxvd1JhbSA9IGZhbHNlLAogICAgICAgIGZiSHogPSA2MCwgdG91Y2hIeiA9IDYwLAogICAgICAgIHNob3dOYXZCYXIgPSBmYWxzZSwKICAgICAgICBrZWVwU2NyZWVuT24gPSB0cnVlLAogICAgKQoKICAgIGZ1biBncHVFbmFibGVkKGN0eDogQ29udGV4dCk6IEJvb2xlYW4gPQogICAgICAgIGN0eC5nZXRTaGFyZWRQcmVmZXJlbmNlcyhQUkVGUywgQ29udGV4dC5NT0RFX1BSSVZBVEUpLmdldEJvb2xlYW4oImdwdSIsIGZhbHNlKQoKICAgIGZ1biBzZXRHcHUoY3R4OiBDb250ZXh0LCBvbjogQm9vbGVhbikgewogICAgICAgIGN0eC5nZXRTaGFyZWRQcmVmZXJlbmNlcyhQUkVGUywgQ29udGV4dC5NT0RFX1BSSVZBVEUpLmVkaXQoKS5wdXRCb29sZWFuKCJncHUiLCBvbikuYXBwbHkoKQogICAgfQoKICAgIC8qKiB3aGF0IGEgU25hcGRyYWdvbiA4MzUgLyBBZHJlbm8gNTQwIHBob25lIHJlcG9ydHMgKi8KICAgIGZ1biBncHVQcm9wcygpOiBNYXA8U3RyaW5nLCBTdHJpbmc+ID0gbWFwT2YoCiAgICAgICAgInJvLmhhcmR3YXJlLmVnbCIgdG8gImFkcmVubyIsCiAgICAgICAgInJvLmJvYXJkLnBsYXRmb3JtIiB0byAibXNtODk5OCIsCiAgICAgICAgInJvLm9wZW5nbGVzLnZlcnNpb24iIHRvICIxOTY2MTAiLAogICAgICAgICJyby5oYXJkd2FyZS52dWxrYW4iIHRvICJhZHJlbm8iLAogICAgKQoKICAgIGZ1biBhcHBseShjdHg6IENvbnRleHQsIGlkOiBTdHJpbmcpIHsKICAgICAgICBJbWFnZVN0b3JlLnVwZGF0ZShjdHgsIGlkKSB7IGltZyAtPiBpbWcuY29weShzZXR0aW5ncyA9IHByZXNldChpbWcuc2V0dGluZ3MpKSB9CiAgICB9Cn0K").decode("utf-8"))
+          print("wrote Gaming.kt")
+          MENU = base64.b64decode("ICAgICAgICAgICAgICAgICAgICBEcm9wZG93bk1lbnVJdGVtKHRleHQgPSB7IFRleHQoIkdhbWluZyBtb2RlIikgfSwKICAgICAgICAgICAgICAgICAgICAgICAgb25DbGljayA9IHsKICAgICAgICAgICAgICAgICAgICAgICAgICAgIG1lbnUgPSBmYWxzZQogICAgICAgICAgICAgICAgICAgICAgICAgICAgYXBwLmFlbXUuY29yZS5HYW1pbmcuYXBwbHkodGhpc0BWbUFjdGl2aXR5LCB2bS5pbWcuaWQpCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBhcHAuYWVtdS5jb3JlLkdhbWluZy5zZXRHcHUodGhpc0BWbUFjdGl2aXR5LCB0cnVlKQogICAgICAgICAgICAgICAgICAgICAgICAgICAgaGlkZVN5c3RlbUJhcnMoKQogICAgICAgICAgICAgICAgICAgICAgICAgICAgdG9hc3QoIkdhbWluZyBwcmVzZXQgc2F2ZWQgLSByZXN0YXJ0IHRoZSBzeXN0ZW0iKQogICAgICAgICAgICAgICAgICAgICAgICB9KQo=").decode("utf-8")
+          METHOD = base64.b64decode("ICAgIHByaXZhdGUgZnVuIGhpZGVTeXN0ZW1CYXJzKCkgewogICAgICAgIHJ1bkNhdGNoaW5nIHsKICAgICAgICAgICAgd2luZG93Lmluc2V0c0NvbnRyb2xsZXI/LmFwcGx5IHsKICAgICAgICAgICAgICAgIHN5c3RlbUJhcnNCZWhhdmlvciA9IGFuZHJvaWQudmlldy5XaW5kb3dJbnNldHNDb250cm9sbGVyLkJFSEFWSU9SX1NIT1dfVFJBTlNJRU5UX0JBUlNfQllfU1dJUEUKICAgICAgICAgICAgICAgIGhpZGUoYW5kcm9pZC52aWV3LldpbmRvd0luc2V0cy5UeXBlLnN5c3RlbUJhcnMoKSkKICAgICAgICAgICAgfQogICAgICAgIH0KICAgIH0KCg==").decode("utf-8")
+
+          def patch(path, anchor, text, tag, after=False):
+              s = open(path, encoding="utf-8").read()
+              if tag in s:
+                  print("  already:", tag); return
+              if anchor not in s:
+                  print("  ANCHOR MISSING in", path); return
+              s = s.replace(anchor, (anchor + text) if after else (text + anchor), 1)
+              open(path, "w", encoding="utf-8").write(s)
+              print("  patched:", tag)
+
+          # 1. GPU identity -> property overrides, before the area is prepared
+          GVM_ANCHOR = '        if (!props.prepare(overrides, later, if (engine == Engine.N64) kernel.propAreaSize else PropArea.SIZE)) error("property area not ready")\n'
+          GVM_NEW = ('        // gaming mode: report a Snapdragon GPU so games take their ES 3.x path\n'
+                     '        if (Gaming.gpuEnabled(ctx)) runCatching { Gaming.gpuProps().forEach { (k, v) -> overrides[k] = v } }\n')
+          patch(GVM, GVM_ANCHOR, GVM_NEW, "Gaming.gpuEnabled(ctx)")
+
+          # 2. helper
+          patch(VM, '    override fun onResume() {\n', METHOD, "private fun hideSystemBars")
+
+          # 3. call it right after the content view is set
+          patch(VM, '        setContentView(root)\n', '        hideSystemBars()\n', "\n        hideSystemBars()\n", after=True)
+
+          # 4. menu entry after Root access
+          VM_ROOT = ('                    DropdownMenuItem(text = { Text("Root access") }, leadingIcon = { Icon(Icons.Rounded.Tune, null) },\n'
+                     '                        enabled = running, onClick = { menu = false; rootDialog = true })\n')
+          patch(VM, VM_ROOT, MENU, 'Text("Gaming mode")', after=True)
+
+          PY
+
+      - name: Commit
+        run: |
+          git config user.name "gaming-bot"
+          git config user.email "gaming-bot@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then echo "nothing to commit"; else
+            git commit -m "add gaming mode (preset + fullscreen + snapdragon gpu identity)"
+            git push
+          fi
