@@ -13,7 +13,6 @@ object Spoof {
         "ro.product.model", "ro.product.brand", "ro.product.manufacturer",
         "ro.product.device", "ro.product.name", "ro.product.marketname",
         "ro.build.fingerprint", "ro.build.product", "ro.build.device",
-        "ro.kernel.qemu", "ro.hardware", "ro.boot.hardware",
         "ro.build.tags", "ro.debuggable", "ro.secure"
     )
 
@@ -37,6 +36,7 @@ object Spoof {
         ctx.getSharedPreferences(FILE, Context.MODE_PRIVATE).edit().clear().apply()
     }
 
+    /** ready-made identities: one tap and the guest stops looking like this phone */
     fun preset(name: String): Map<String, String> = when (name) {
         "pixel7" -> mapOf(
             "ro.product.model" to "Pixel 7",
@@ -48,9 +48,6 @@ object Spoof {
             "ro.build.fingerprint" to "google/panther/panther:14/UQ1A.240205.004/11269751:user/release-keys",
             "ro.build.product" to "panther",
             "ro.build.device" to "panther",
-            "ro.kernel.qemu" to "0",
-            "ro.hardware" to "qcom",
-            "ro.boot.hardware" to "qcom",
             "ro.build.tags" to "release-keys",
             "ro.debuggable" to "0",
             "ro.secure" to "1"
@@ -65,9 +62,6 @@ object Spoof {
             "ro.build.fingerprint" to "samsung/dm1qxx/dm1q:14/UP1A.231005.007/S911BXXS3AWLM:user/release-keys",
             "ro.build.product" to "dm1q",
             "ro.build.device" to "dm1q",
-            "ro.kernel.qemu" to "0",
-            "ro.hardware" to "qcom",
-            "ro.boot.hardware" to "qcom",
             "ro.build.tags" to "release-keys",
             "ro.debuggable" to "0",
             "ro.secure" to "1"
