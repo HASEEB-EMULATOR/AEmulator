@@ -1,0 +1,55 @@
+name: Wire device identity
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  wire:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Patch
+        run: |
+          python3 - <<'PY'
+          GVM = "app/src/main/java/app/aemu/core/GuestVm.kt"
+          VM = "app/src/main/java/app/aemu/ui/VmActivity.kt"
+
+          def patch(path, anchor, text, tag, after=False):
+              s = open(path, encoding="utf-8").read()
+              if tag in s:
+                  print("  already:", tag); return
+              if anchor not in s:
+                  print("  ANCHOR MISSING in", path); return
+              s = s.replace(anchor, (anchor + text) if after else (text + anchor), 1)
+              open(path, "w", encoding="utf-8").write(s)
+              print("  patched:", tag)
+
+          # 1. GuestVm: put the spoofed props into the property area
+          A = '        if (!props.prepare(overrides, later, if (engine == Engine.N64) kernel.propAreaSize else PropArea.SIZE)) error("property area not ready")\n'
+          T = ('        // device identity: written by the "Device identity" menu\n'
+               '        runCatching { Spoof.map(ctx).forEach { (k, v) -> overrides[k] = v } }\n')
+          patch(GVM, A, T, "Spoof.map(ctx)")
+
+          # 2. VmActivity: dialog state
+          A2 = '        var rootDialog by remember { mutableStateOf(false) }\n'
+          T2 = ('        var spoofDialog by remember { mutableStateOf(false) }\n'
+                '        if (spoofDialog) SpoofDialog { spoofDialog = false }\n')
+          patch(VM, A2, T2, "var spoofDialog", after=True)
+
+          # 3. VmActivity: menu entry
+          A3 = ('                    DropdownMenuItem(text = { Text("Root access") }, leadingIcon = { Icon(Icons.Rounded.Tune, null) },\n'
+                '                        enabled = running, onClick = { menu = false; rootDialog = true })\n')
+          T3 = ('                    DropdownMenuItem(text = { Text("Device identity") },\n'
+                '                        enabled = running, onClick = { menu = false; spoofDialog = true })\n')
+          patch(VM, A3, T3, 'Text("Device identity")', after=True)
+          PY
+
+      - name: Commit
+        run: |
+          git config user.name "spoof-bot"
+          git config user.email "spoof-bot@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then echo "nothing to commit"; else
+            git commit -m "wire device identity into the vm menu"
+            git push
+          fi
