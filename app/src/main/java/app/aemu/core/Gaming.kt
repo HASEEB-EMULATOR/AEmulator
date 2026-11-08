@@ -71,6 +71,9 @@ object Gaming {
     fun withFps(s: VmSettings, fps: Int): VmSettings =
         s.copy(fbHz = fps, touchHz = fps)
 
+    /** guest screen widths: 360 = fastest, 720 = as sharp as the phone itself */
+    val QUALITY = listOf(360, 540, 720)
+
     /** identity only — never hardware or qemu properties */
     fun props(ctx: Context): Map<String, String> {
         val id = prefs(ctx).getString("device", null) ?: return emptyMap()
@@ -92,12 +95,13 @@ object Gaming {
     }
 
     /** the guest runs at the host's aspect ratio, so the picture fills the screen */
-    fun fit(ctx: Context, s: VmSettings): VmSettings {
+    fun fit(ctx: Context, s: VmSettings, quality: Int = 360): VmSettings {
         val dm = ctx.resources.displayMetrics
-        val w = 360
+        val w = quality
         val h = (w * dm.heightPixels.toFloat() / dm.widthPixels).toInt().coerceAtLeast(640)
+        val dpi = (w * 160 / 360).coerceIn(120, 640)
         return s.copy(
-            width = w, height = h, density = 160,
+            width = w, height = h, density = dpi,
             gpu = true, hwui = true, jit = true,
             ramMb = 2048, lowRam = false,
             fbHz = 60, touchHz = 60,
@@ -106,16 +110,18 @@ object Gaming {
         )
     }
 
-    fun apply(ctx: Context, imageId: String, device: Device, fps: Int = 60) {
-        prefs(ctx).edit().putString("device", device.id).putInt("fps", fps).putBoolean("gpu", true).apply()
+    fun apply(ctx: Context, imageId: String, device: Device, fps: Int = 60, quality: Int = 360) {
+        prefs(ctx).edit().putString("device", device.id).putInt("fps", fps)
+            .putInt("quality", quality).putBoolean("gpu", true).apply()
         ImageStore.update(ctx, imageId) { img ->
-            img.copy(settings = withFps(fit(ctx, img.settings), fps))
+            img.copy(settings = withFps(fit(ctx, img.settings, quality), fps))
         }
     }
 
     /** settings screen: remember the phone and fit the default settings */
-    fun applyDefaults(ctx: Context, s: VmSettings, device: Device, fps: Int = 60): VmSettings {
-        prefs(ctx).edit().putString("device", device.id).putInt("fps", fps).putBoolean("gpu", true).apply()
-        return withFps(fit(ctx, s), fps)
+    fun applyDefaults(ctx: Context, s: VmSettings, device: Device, fps: Int = 60, quality: Int = 360): VmSettings {
+        prefs(ctx).edit().putString("device", device.id).putInt("fps", fps)
+            .putInt("quality", quality).putBoolean("gpu", true).apply()
+        return withFps(fit(ctx, s, quality), fps)
     }
 }

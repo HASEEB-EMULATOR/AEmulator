@@ -29,8 +29,9 @@ import app.aemu.core.Gaming
  * Choosing one fits the guest screen to this display, so nothing is letterboxed.
  */
 @Composable
-fun GamingDialog(onPick: (Gaming.Device, Int) -> Unit, onDismiss: () -> Unit) {
+fun GamingDialog(onPick: (Gaming.Device, Int, Int) -> Unit, onDismiss: () -> Unit) {
     var fps by remember { mutableIntStateOf(60) }
+    var quality by remember { mutableIntStateOf(360) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -43,6 +44,15 @@ fun GamingDialog(onPick: (Gaming.Device, Int) -> Unit, onDismiss: () -> Unit) {
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.padding(bottom = 10.dp)
                 )
+
+                Text("Quality (screen width)", style = MaterialTheme.typography.labelLarge)
+                Row(Modifier.fillMaxWidth().padding(vertical = 6.dp),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Gaming.QUALITY.forEach { v ->
+                        FilterChip(selected = quality == v, onClick = { quality = v },
+                            label = { Text(if (v == 720) "720 sharp" else "$v") })
+                    }
+                }
 
                 Text("Refresh rate", style = MaterialTheme.typography.labelLarge)
                 Row(Modifier.fillMaxWidth().padding(vertical = 6.dp),
@@ -58,7 +68,7 @@ fun GamingDialog(onPick: (Gaming.Device, Int) -> Unit, onDismiss: () -> Unit) {
                     Column(
                         Modifier
                             .fillMaxWidth()
-                            .clickable { onPick(d, fps) }
+                            .clickable { onPick(d, fps, quality) }
                             .padding(vertical = 10.dp, horizontal = 4.dp)
                     ) {
                         Text(d.label, style = MaterialTheme.typography.titleMedium)

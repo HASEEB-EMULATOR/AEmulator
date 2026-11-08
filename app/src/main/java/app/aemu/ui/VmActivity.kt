@@ -223,7 +223,10 @@ class VmActivity : ComponentActivity() {
         var safeBottom = 0
         androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(root) { v, ins ->
             val bars = ins.getInsets(androidx.core.view.WindowInsetsCompat.Type.systemBars() or androidx.core.view.WindowInsetsCompat.Type.displayCutout())
-            if (bars.top != safeTop || bars.bottom != safeBottom) { safeTop = bars.top; safeBottom = bars.bottom; v.requestLayout() }
+            // fullscreen: the bars are hidden, so the guest fills the whole screen
+            val top = if (immersive) 0 else bars.top
+            val bottom = if (immersive) 0 else bars.bottom
+            if (top != safeTop || bottom != safeBottom) { safeTop = top; safeBottom = bottom; v.requestLayout() }
             ins
         }
         root.addOnLayoutChangeListener { v, l, t, r, b, _, _, _, _ ->
@@ -329,7 +332,15 @@ class VmActivity : ComponentActivity() {
         else -> null
     }
 
+    private var immersive = false
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus && immersive) hideSystemBars()
+    }
+
     private fun hideSystemBars() {
+        immersive = true
         runCatching {
             window.insetsController?.apply {
                 systemBarsBehavior = android.view.WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
@@ -688,11 +699,11 @@ class VmActivity : ComponentActivity() {
         var spoofDialog by remember { mutableStateOf(false) }
         var gamingDialog by remember { mutableStateOf(false) }
         if (gamingDialog) GamingDialog(
-            onPick = { d, fps ->
+            onPick = { d, fps, q ->
                 gamingDialog = false
-                app.aemu.core.Gaming.apply(this@VmActivity, vm.img.id, d, fps)
+                app.aemu.core.Gaming.apply(this@VmActivity, vm.img.id, d, fps, q)
                 hideSystemBars()
-                toast("Gaming mode: " + d.label + " @ " + fps + " fps - restart the system")
+                toast("Gaming mode: " + d.label + " @ " + fps + " fps, " + q + "p - restart the system")
             },
             onDismiss = { gamingDialog = false }
         )
