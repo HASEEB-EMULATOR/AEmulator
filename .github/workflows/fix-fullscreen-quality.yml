@@ -1,0 +1,114 @@
+name: Fullscreen quality fix
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Apply
+        run: |
+          python3 - <<'PY'
+          import base64
+
+          CORE = "app/src/main/java/app/aemu/core/"
+          UI = "app/src/main/java/app/aemu/ui/"
+          VM = UI + "VmActivity.kt"
+          ASA = UI + "AppSettingsActivity.kt"
+
+          open(CORE + "Gaming.kt", "w", encoding="utf-8").write(base64.b64decode("cGFja2FnZSBhcHAuYWVtdS5jb3JlCgppbXBvcnQgYW5kcm9pZC5jb250ZW50LkNvbnRleHQKCi8qKgogKiBHYW1pbmcgbW9kZTogcGljayBhIHBob25lIHRvIGltaXRhdGUsIHRoZW4gdGhlIGd1ZXN0IHJ1bnMgYXQgdGhhdCBwaG9uZSdzCiAqIGFzcGVjdCByYXRpbyAoc28gdGhlIHBpY3R1cmUgZmlsbHMgdGhlIHNjcmVlbikgYW5kIHJlcG9ydHMgaXRzIGlkZW50aXR5LgogKgogKiBIYXJkd2FyZSBwcm9wZXJ0aWVzIChyby5oYXJkd2FyZS5lZ2wsIHJvLm9wZW5nbGVzLnZlcnNpb24sIHJvLmtlcm5lbC5xZW11KQogKiBhcmUgZGVsaWJlcmF0ZWx5IGxlZnQgYWxvbmU6IHRoZSBlbmdpbmUgc2VydmVzIGdyYXBoaWNzIHdpdGggdGhlIHBob25lJ3MgcmVhbAogKiBHUFUsIGFuZCBseWluZyBhYm91dCBpdCBtYWtlcyBTdXJmYWNlRmxpbmdlciBhYm9ydC4KICovCm9iamVjdCBHYW1pbmcgewogICAgcHJpdmF0ZSBjb25zdCB2YWwgUFJFRlMgPSAiYWVtdV9nYW1pbmciCgogICAgZGF0YSBjbGFzcyBEZXZpY2UoCiAgICAgICAgdmFsIGlkOiBTdHJpbmcsCiAgICAgICAgdmFsIGxhYmVsOiBTdHJpbmcsCiAgICAgICAgdmFsIG1vZGVsOiBTdHJpbmcsCiAgICAgICAgdmFsIGJyYW5kOiBTdHJpbmcsCiAgICAgICAgdmFsIG1hbnVmYWN0dXJlcjogU3RyaW5nLAogICAgICAgIHZhbCBkZXZpY2U6IFN0cmluZywKICAgICAgICB2YWwgZmluZ2VycHJpbnQ6IFN0cmluZywKICAgICAgICB2YWwgZ3B1OiBTdHJpbmcsICAgICAgICAgIC8vIHNob3duIGluIHRoZSBwaWNrZXIgb25seQogICAgICAgIHZhbCBwbGF0Zm9ybTogU3RyaW5nLAogICAgICAgIHZhbCBnbGVzOiBTdHJpbmcsCiAgICApCgogICAgdmFsIERFVklDRVMgPSBsaXN0T2YoCiAgICAgICAgRGV2aWNlKCJzMjV1IiwgIkdhbGF4eSBTMjUgVWx0cmEiLCAiU00tUzkzOEIiLCAic2Ftc3VuZyIsICJzYW1zdW5nIiwgImUzcSIsCiAgICAgICAgICAgICJzYW1zdW5nL2UzcXh4eC9lM3E6MTUvQVAzQS4yNDA5MDUuMDE1L1M5MzhCWFhVMUFYSzE6dXNlci9yZWxlYXNlLWtleXMiLAogICAgICAgICAgICAiYWRyZW5vIiwgInN1biIsICIxOTY2MTAiKSwKICAgICAgICBEZXZpY2UoInMyNHUiLCAiR2FsYXh5IFMyNCBVbHRyYSIsICJTTS1TOTI4QiIsICJzYW1zdW5nIiwgInNhbXN1bmciLCAiZTNxIiwKICAgICAgICAgICAgInNhbXN1bmcvZTNxeHh4L2UzcToxNC9VUDFBLjIzMTAwNS4wMDcvUzkyOEJYWFMzQVhLMTp1c2VyL3JlbGVhc2Uta2V5cyIsCiAgICAgICAgICAgICJhZHJlbm8iLCAicGluZWFwcGxlIiwgIjE5NjYxMCIpLAogICAgICAgIERldmljZSgicm0xMCIsICJSZWRNYWdpYyAxMCBQcm8iLCAiTlg3ODlKIiwgIm51YmlhIiwgIlpURSIsICJOWDc4OUoiLAogICAgICAgICAgICAibnViaWEvTlg3ODlKL05YNzg5SjoxNS9BUTNBLjI0MDgyOS4wMDMvMjAyNDEyMTg6dXNlci9yZWxlYXNlLWtleXMiLAogICAgICAgICAgICAiYWRyZW5vIiwgInN1biIsICIxOTY2MTAiKSwKICAgICAgICBEZXZpY2UoInJtOSIsICJSZWRNYWdpYyA5IFBybyIsICJOWDc2OUoiLCAibnViaWEiLCAiWlRFIiwgIk5YNzY5SiIsCiAgICAgICAgICAgICJudWJpYS9OWDc2OUovTlg3NjlKOjE0L1VLUTEuMjMxMDAzLjAwMi8yMDI0MDUyMDp1c2VyL3JlbGVhc2Uta2V5cyIsCiAgICAgICAgICAgICJhZHJlbm8iLCAicGluZWFwcGxlIiwgIjE5NjYxMCIpLAogICAgICAgIERldmljZSgicm9nOSIsICJST0cgUGhvbmUgOSIsICJBU1VTX0FJMjUwMSIsICJhc3VzIiwgImFzdXMiLCAiQUkyNTAxIiwKICAgICAgICAgICAgImFzdXMvV1dfQUkyNTAxL0FJMjUwMToxNS9BUTNBLjI0MDgyOS4wMDMvMjAyNDEyMTA6dXNlci9yZWxlYXNlLWtleXMiLAogICAgICAgICAgICAiYWRyZW5vIiwgInN1biIsICIxOTY2MTAiKSwKICAgICAgICBEZXZpY2UoInJvZzgiLCAiUk9HIFBob25lIDgiLCAiQVNVU19BSTI0MDEiLCAiYXN1cyIsICJhc3VzIiwgIkFJMjQwMSIsCiAgICAgICAgICAgICJhc3VzL1dXX0FJMjQwMS9BSTI0MDE6MTQvVUtRMS4yMzEwMDMuMDAyLzIwMjQwNzEwOnVzZXIvcmVsZWFzZS1rZXlzIiwKICAgICAgICAgICAgImFkcmVubyIsICJwaW5lYXBwbGUiLCAiMTk2NjEwIiksCiAgICAgICAgRGV2aWNlKCJpcW9vMTMiLCAiaVFPTyAxMyIsICJWMjQwOEEiLCAidml2byIsICJ2aXZvIiwgIlYyNDA4QSIsCiAgICAgICAgICAgICJ2aXZvL1YyNDA4QS9WMjQwOEE6MTUvQVAzQS4yNDA5MDUuMDE1LzIwMjQxMjIwOnVzZXIvcmVsZWFzZS1rZXlzIiwKICAgICAgICAgICAgImFkcmVubyIsICJzdW4iLCAiMTk2NjEwIiksCiAgICAgICAgRGV2aWNlKCJvcDEzIiwgIk9uZVBsdXMgMTMiLCAiUEpaMTEwIiwgIk9uZVBsdXMiLCAiT25lUGx1cyIsICJQSloxMTAiLAogICAgICAgICAgICAiT25lUGx1cy9QSloxMTAvUEpaMTEwOjE1L0FQM0EuMjQwOTA1LjAxNS8yMDI0MTIxNTp1c2VyL3JlbGVhc2Uta2V5cyIsCiAgICAgICAgICAgICJhZHJlbm8iLCAic3VuIiwgIjE5NjYxMCIpLAogICAgICAgIERldmljZSgicG9jb0Y3IiwgIlBvY28gRjcgUHJvIiwgIjI0MTE3UksyQyIsICJYaWFvbWkiLCAiWGlhb21pIiwgInJlZHdvb2QiLAogICAgICAgICAgICAiWGlhb21pL3JlZHdvb2QvcmVkd29vZDoxNS9BUTNBLjI0MDgyOS4wMDMvT1MyLjAuMTAuMDp1c2VyL3JlbGVhc2Uta2V5cyIsCiAgICAgICAgICAgICJhZHJlbm8iLCAicGluZWFwcGxlIiwgIjE5NjYxMCIpLAogICAgICAgIERldmljZSgieDE1IiwgIlhpYW9taSAxNSIsICIyNDEyOVBONzRDIiwgIlhpYW9taSIsICJYaWFvbWkiLCAiZGFkYSIsCiAgICAgICAgICAgICJYaWFvbWkvZGFkYS9kYWRhOjE1L0FRM0EuMjQwODI5LjAwMy9PUzIuMC4xMi4wOnVzZXIvcmVsZWFzZS1rZXlzIiwKICAgICAgICAgICAgImFkcmVubyIsICJzdW4iLCAiMTk2NjEwIiksCiAgICApCgogICAgcHJpdmF0ZSBmdW4gcHJlZnMoY3R4OiBDb250ZXh0KSA9IGN0eC5nZXRTaGFyZWRQcmVmZXJlbmNlcyhQUkVGUywgQ29udGV4dC5NT0RFX1BSSVZBVEUpCgogICAgZnVuIGdwdUVuYWJsZWQoY3R4OiBDb250ZXh0KTogQm9vbGVhbiA9IHByZWZzKGN0eCkuZ2V0Qm9vbGVhbigiZ3B1IiwgZmFsc2UpCgogICAgZnVuIHNldEdwdShjdHg6IENvbnRleHQsIG9uOiBCb29sZWFuKSB7IHByZWZzKGN0eCkuZWRpdCgpLnB1dEJvb2xlYW4oImdwdSIsIG9uKS5hcHBseSgpIH0KCiAgICAvKiogcmVmcmVzaCByYXRlcyB0aGUgZ3Vlc3QgY2FuIGJlIGFza2VkIHRvIHJ1biBhdCAqLwogICAgdmFsIEZQUyA9IGxpc3RPZigzMCwgNDUsIDYwLCA5MCwgMTIwKQoKICAgIGZ1biB3aXRoRnBzKHM6IFZtU2V0dGluZ3MsIGZwczogSW50KTogVm1TZXR0aW5ncyA9CiAgICAgICAgcy5jb3B5KGZiSHogPSBmcHMsIHRvdWNoSHogPSBmcHMpCgogICAgLyoqIGd1ZXN0IHNjcmVlbiB3aWR0aHM6IDM2MCA9IGZhc3Rlc3QsIDcyMCA9IGFzIHNoYXJwIGFzIHRoZSBwaG9uZSBpdHNlbGYgKi8KICAgIHZhbCBRVUFMSVRZID0gbGlzdE9mKDM2MCwgNTQwLCA3MjApCgogICAgLyoqIGlkZW50aXR5IG9ubHkg4oCUIG5ldmVyIGhhcmR3YXJlIG9yIHFlbXUgcHJvcGVydGllcyAqLwogICAgZnVuIHByb3BzKGN0eDogQ29udGV4dCk6IE1hcDxTdHJpbmcsIFN0cmluZz4gewogICAgICAgIHZhbCBpZCA9IHByZWZzKGN0eCkuZ2V0U3RyaW5nKCJkZXZpY2UiLCBudWxsKSA/OiByZXR1cm4gZW1wdHlNYXAoKQogICAgICAgIHZhbCBkID0gREVWSUNFUy5maXJzdE9yTnVsbCB7IGl0LmlkID09IGlkIH0gPzogcmV0dXJuIGVtcHR5TWFwKCkKICAgICAgICByZXR1cm4gbWFwT2YoCiAgICAgICAgICAgICJyby5wcm9kdWN0Lm1vZGVsIiB0byBkLm1vZGVsLAogICAgICAgICAgICAicm8ucHJvZHVjdC5icmFuZCIgdG8gZC5icmFuZCwKICAgICAgICAgICAgInJvLnByb2R1Y3QubWFudWZhY3R1cmVyIiB0byBkLm1hbnVmYWN0dXJlciwKICAgICAgICAgICAgInJvLnByb2R1Y3QuZGV2aWNlIiB0byBkLmRldmljZSwKICAgICAgICAgICAgInJvLnByb2R1Y3QubmFtZSIgdG8gZC5kZXZpY2UsCiAgICAgICAgICAgICJyby5wcm9kdWN0Lm1hcmtldG5hbWUiIHRvIGQubGFiZWwsCiAgICAgICAgICAgICJyby5idWlsZC5maW5nZXJwcmludCIgdG8gZC5maW5nZXJwcmludCwKICAgICAgICAgICAgInJvLmJ1aWxkLnByb2R1Y3QiIHRvIGQuZGV2aWNlLAogICAgICAgICAgICAicm8uYnVpbGQuZGV2aWNlIiB0byBkLmRldmljZSwKICAgICAgICAgICAgInJvLmJ1aWxkLnRhZ3MiIHRvICJyZWxlYXNlLWtleXMiLAogICAgICAgICAgICAicm8uZGVidWdnYWJsZSIgdG8gIjAiLAogICAgICAgICAgICAicm8uc2VjdXJlIiB0byAiMSIsCiAgICAgICAgKQogICAgfQoKICAgIC8qKiB0aGUgZ3Vlc3QgcnVucyBhdCB0aGUgaG9zdCdzIGFzcGVjdCByYXRpbywgc28gdGhlIHBpY3R1cmUgZmlsbHMgdGhlIHNjcmVlbiAqLwogICAgZnVuIGZpdChjdHg6IENvbnRleHQsIHM6IFZtU2V0dGluZ3MsIHF1YWxpdHk6IEludCA9IDM2MCk6IFZtU2V0dGluZ3MgewogICAgICAgIHZhbCBkbSA9IGN0eC5yZXNvdXJjZXMuZGlzcGxheU1ldHJpY3MKICAgICAgICB2YWwgdyA9IHF1YWxpdHkKICAgICAgICB2YWwgaCA9ICh3ICogZG0uaGVpZ2h0UGl4ZWxzLnRvRmxvYXQoKSAvIGRtLndpZHRoUGl4ZWxzKS50b0ludCgpLmNvZXJjZUF0TGVhc3QoNjQwKQogICAgICAgIHZhbCBkcGkgPSAodyAqIDE2MCAvIDM2MCkuY29lcmNlSW4oMTIwLCA2NDApCiAgICAgICAgcmV0dXJuIHMuY29weSgKICAgICAgICAgICAgd2lkdGggPSB3LCBoZWlnaHQgPSBoLCBkZW5zaXR5ID0gZHBpLAogICAgICAgICAgICBncHUgPSB0cnVlLCBod3VpID0gdHJ1ZSwgaml0ID0gdHJ1ZSwKICAgICAgICAgICAgcmFtTWIgPSAyMDQ4LCBsb3dSYW0gPSBmYWxzZSwKICAgICAgICAgICAgZmJIeiA9IDYwLCB0b3VjaEh6ID0gNjAsCiAgICAgICAgICAgIHNob3dOYXZCYXIgPSBmYWxzZSwKICAgICAgICAgICAga2VlcFNjcmVlbk9uID0gdHJ1ZSwKICAgICAgICApCiAgICB9CgogICAgZnVuIGFwcGx5KGN0eDogQ29udGV4dCwgaW1hZ2VJZDogU3RyaW5nLCBkZXZpY2U6IERldmljZSwgZnBzOiBJbnQgPSA2MCwgcXVhbGl0eTogSW50ID0gMzYwKSB7CiAgICAgICAgcHJlZnMoY3R4KS5lZGl0KCkucHV0U3RyaW5nKCJkZXZpY2UiLCBkZXZpY2UuaWQpLnB1dEludCgiZnBzIiwgZnBzKQogICAgICAgICAgICAucHV0SW50KCJxdWFsaXR5IiwgcXVhbGl0eSkucHV0Qm9vbGVhbigiZ3B1IiwgdHJ1ZSkuYXBwbHkoKQogICAgICAgIEltYWdlU3RvcmUudXBkYXRlKGN0eCwgaW1hZ2VJZCkgeyBpbWcgLT4KICAgICAgICAgICAgaW1nLmNvcHkoc2V0dGluZ3MgPSB3aXRoRnBzKGZpdChjdHgsIGltZy5zZXR0aW5ncywgcXVhbGl0eSksIGZwcykpCiAgICAgICAgfQogICAgfQoKICAgIC8qKiBzZXR0aW5ncyBzY3JlZW46IHJlbWVtYmVyIHRoZSBwaG9uZSBhbmQgZml0IHRoZSBkZWZhdWx0IHNldHRpbmdzICovCiAgICBmdW4gYXBwbHlEZWZhdWx0cyhjdHg6IENvbnRleHQsIHM6IFZtU2V0dGluZ3MsIGRldmljZTogRGV2aWNlLCBmcHM6IEludCA9IDYwLCBxdWFsaXR5OiBJbnQgPSAzNjApOiBWbVNldHRpbmdzIHsKICAgICAgICBwcmVmcyhjdHgpLmVkaXQoKS5wdXRTdHJpbmcoImRldmljZSIsIGRldmljZS5pZCkucHV0SW50KCJmcHMiLCBmcHMpCiAgICAgICAgICAgIC5wdXRJbnQoInF1YWxpdHkiLCBxdWFsaXR5KS5wdXRCb29sZWFuKCJncHUiLCB0cnVlKS5hcHBseSgpCiAgICAgICAgcmV0dXJuIHdpdGhGcHMoZml0KGN0eCwgcywgcXVhbGl0eSksIGZwcykKICAgIH0KfQo=").decode("utf-8"))
+          open(UI + "GamingDialog.kt", "w", encoding="utf-8").write(base64.b64decode("cGFja2FnZSBhcHAuYWVtdS51aQoKaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UuZm91bmRhdGlvbi5jbGlja2FibGUKaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UuZm91bmRhdGlvbi5sYXlvdXQuQXJyYW5nZW1lbnQKaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UuZm91bmRhdGlvbi5sYXlvdXQuQ29sdW1uCmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLmZvdW5kYXRpb24ubGF5b3V0LlJvdwppbXBvcnQgYW5kcm9pZHguY29tcG9zZS5mb3VuZGF0aW9uLmxheW91dC5maWxsTWF4V2lkdGgKaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UuZm91bmRhdGlvbi5sYXlvdXQuaGVpZ2h0SW4KaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UuZm91bmRhdGlvbi5sYXlvdXQucGFkZGluZwppbXBvcnQgYW5kcm9pZHguY29tcG9zZS5mb3VuZGF0aW9uLnJlbWVtYmVyU2Nyb2xsU3RhdGUKaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UuZm91bmRhdGlvbi52ZXJ0aWNhbFNjcm9sbAppbXBvcnQgYW5kcm9pZHguY29tcG9zZS5tYXRlcmlhbDMuQWxlcnREaWFsb2cKaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UubWF0ZXJpYWwzLkZpbHRlckNoaXAKaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UubWF0ZXJpYWwzLkhvcml6b250YWxEaXZpZGVyCmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLm1hdGVyaWFsMy5NYXRlcmlhbFRoZW1lCmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLm1hdGVyaWFsMy5UZXh0CmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLm1hdGVyaWFsMy5UZXh0QnV0dG9uCmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLnJ1bnRpbWUuQ29tcG9zYWJsZQppbXBvcnQgYW5kcm9pZHguY29tcG9zZS5ydW50aW1lLmdldFZhbHVlCmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLnJ1bnRpbWUubXV0YWJsZUludFN0YXRlT2YKaW1wb3J0IGFuZHJvaWR4LmNvbXBvc2UucnVudGltZS5yZW1lbWJlcgppbXBvcnQgYW5kcm9pZHguY29tcG9zZS5ydW50aW1lLnNldFZhbHVlCmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLnVpLk1vZGlmaWVyCmltcG9ydCBhbmRyb2lkeC5jb21wb3NlLnVpLnVuaXQuZHAKaW1wb3J0IGFwcC5hZW11LmNvcmUuR2FtaW5nCgovKioKICogUGljayB0aGUgcGhvbmUgdGhlIGd1ZXN0IHNob3VsZCBwcmV0ZW5kIHRvIGJlIGFuZCB0aGUgcmVmcmVzaCByYXRlIGl0IHJ1bnMgYXQuCiAqIENob29zaW5nIG9uZSBmaXRzIHRoZSBndWVzdCBzY3JlZW4gdG8gdGhpcyBkaXNwbGF5LCBzbyBub3RoaW5nIGlzIGxldHRlcmJveGVkLgogKi8KQENvbXBvc2FibGUKZnVuIEdhbWluZ0RpYWxvZyhvblBpY2s6IChHYW1pbmcuRGV2aWNlLCBJbnQsIEludCkgLT4gVW5pdCwgb25EaXNtaXNzOiAoKSAtPiBVbml0KSB7CiAgICB2YXIgZnBzIGJ5IHJlbWVtYmVyIHsgbXV0YWJsZUludFN0YXRlT2YoNjApIH0KICAgIHZhciBxdWFsaXR5IGJ5IHJlbWVtYmVyIHsgbXV0YWJsZUludFN0YXRlT2YoMzYwKSB9CgogICAgQWxlcnREaWFsb2coCiAgICAgICAgb25EaXNtaXNzUmVxdWVzdCA9IG9uRGlzbWlzcywKICAgICAgICB0aXRsZSA9IHsgVGV4dCgiR2FtaW5nIG1vZGUiKSB9LAogICAgICAgIHRleHQgPSB7CiAgICAgICAgICAgIENvbHVtbihNb2RpZmllci5oZWlnaHRJbihtYXggPSA0ODAuZHApLnZlcnRpY2FsU2Nyb2xsKHJlbWVtYmVyU2Nyb2xsU3RhdGUoKSkpIHsKICAgICAgICAgICAgICAgIFRleHQoCiAgICAgICAgICAgICAgICAgICAgIlBpY2sgYSBwaG9uZS4gVGhlIHNjcmVlbiBpcyBmaXR0ZWQgdG8geW91cnMgYW5kIHlvdXIgcGhvbmUncyBvd24gR1BVIGlzIHVzZWQsICIgKwogICAgICAgICAgICAgICAgICAgICAgICAic28gaXQgd29ya3Mgb24gZXZlcnkgZGV2aWNlLiIsCiAgICAgICAgICAgICAgICAgICAgc3R5bGUgPSBNYXRlcmlhbFRoZW1lLnR5cG9ncmFwaHkuYm9keVNtYWxsLAogICAgICAgICAgICAgICAgICAgIG1vZGlmaWVyID0gTW9kaWZpZXIucGFkZGluZyhib3R0b20gPSAxMC5kcCkKICAgICAgICAgICAgICAgICkKCiAgICAgICAgICAgICAgICBUZXh0KCJRdWFsaXR5IChzY3JlZW4gd2lkdGgpIiwgc3R5bGUgPSBNYXRlcmlhbFRoZW1lLnR5cG9ncmFwaHkubGFiZWxMYXJnZSkKICAgICAgICAgICAgICAgIFJvdyhNb2RpZmllci5maWxsTWF4V2lkdGgoKS5wYWRkaW5nKHZlcnRpY2FsID0gNi5kcCksCiAgICAgICAgICAgICAgICAgICAgaG9yaXpvbnRhbEFycmFuZ2VtZW50ID0gQXJyYW5nZW1lbnQuc3BhY2VkQnkoNi5kcCkpIHsKICAgICAgICAgICAgICAgICAgICBHYW1pbmcuUVVBTElUWS5mb3JFYWNoIHsgdiAtPgogICAgICAgICAgICAgICAgICAgICAgICBGaWx0ZXJDaGlwKHNlbGVjdGVkID0gcXVhbGl0eSA9PSB2LCBvbkNsaWNrID0geyBxdWFsaXR5ID0gdiB9LAogICAgICAgICAgICAgICAgICAgICAgICAgICAgbGFiZWwgPSB7IFRleHQoaWYgKHYgPT0gNzIwKSAiNzIwIHNoYXJwIiBlbHNlICIkdiIpIH0pCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgfQoKICAgICAgICAgICAgICAgIFRleHQoIlJlZnJlc2ggcmF0ZSIsIHN0eWxlID0gTWF0ZXJpYWxUaGVtZS50eXBvZ3JhcGh5LmxhYmVsTGFyZ2UpCiAgICAgICAgICAgICAgICBSb3coTW9kaWZpZXIuZmlsbE1heFdpZHRoKCkucGFkZGluZyh2ZXJ0aWNhbCA9IDYuZHApLAogICAgICAgICAgICAgICAgICAgIGhvcml6b250YWxBcnJhbmdlbWVudCA9IEFycmFuZ2VtZW50LnNwYWNlZEJ5KDYuZHApKSB7CiAgICAgICAgICAgICAgICAgICAgR2FtaW5nLkZQUy5mb3JFYWNoIHsgdiAtPgogICAgICAgICAgICAgICAgICAgICAgICBGaWx0ZXJDaGlwKHNlbGVjdGVkID0gZnBzID09IHYsIG9uQ2xpY2sgPSB7IGZwcyA9IHYgfSwgbGFiZWwgPSB7IFRleHQoIiR2IikgfSkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICB9CgogICAgICAgICAgICAgICAgSG9yaXpvbnRhbERpdmlkZXIoTW9kaWZpZXIucGFkZGluZyh2ZXJ0aWNhbCA9IDguZHApKQoKICAgICAgICAgICAgICAgIEdhbWluZy5ERVZJQ0VTLmZvckVhY2ggeyBkIC0+CiAgICAgICAgICAgICAgICAgICAgQ29sdW1uKAogICAgICAgICAgICAgICAgICAgICAgICBNb2RpZmllcgogICAgICAgICAgICAgICAgICAgICAgICAgICAgLmZpbGxNYXhXaWR0aCgpCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAuY2xpY2thYmxlIHsgb25QaWNrKGQsIGZwcywgcXVhbGl0eSkgfQogICAgICAgICAgICAgICAgICAgICAgICAgICAgLnBhZGRpbmcodmVydGljYWwgPSAxMC5kcCwgaG9yaXpvbnRhbCA9IDQuZHApCiAgICAgICAgICAgICAgICAgICAgKSB7CiAgICAgICAgICAgICAgICAgICAgICAgIFRleHQoZC5sYWJlbCwgc3R5bGUgPSBNYXRlcmlhbFRoZW1lLnR5cG9ncmFwaHkudGl0bGVNZWRpdW0pCiAgICAgICAgICAgICAgICAgICAgICAgIFRleHQoZC5tb2RlbCArICIgwrcgIiArIGQuZmluZ2VycHJpbnQudGFrZSgyOCkgKyAi4oCmIiwKICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0eWxlID0gTWF0ZXJpYWxUaGVtZS50eXBvZ3JhcGh5LmJvZHlTbWFsbCkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICAgICAgSG9yaXpvbnRhbERpdmlkZXIoKQogICAgICAgICAgICAgICAgfQogICAgICAgICAgICB9CiAgICAgICAgfSwKICAgICAgICBjb25maXJtQnV0dG9uID0geyBUZXh0QnV0dG9uKG9uQ2xpY2sgPSBvbkRpc21pc3MpIHsgVGV4dCgiQ2FuY2VsIikgfSB9LAogICAgKQp9Cg==").decode("utf-8"))
+          print("wrote Gaming.kt + GamingDialog.kt (quality + fps)")
+
+          def sub(path, old, new, tag):
+              s = open(path, encoding="utf-8").read()
+              if tag in s:
+                  print("  already:", tag); return
+              if old not in s:
+                  print("  OLD NOT FOUND in", path); return
+              s = s.replace(old, new, 1)
+              open(path, "w", encoding="utf-8").write(s)
+              print("  patched:", tag)
+
+          # 1. VmActivity: dialog now reports quality too
+          OLD = "\n".join([
+              '            onPick = { d, fps ->',
+              '                gamingDialog = false',
+              '                app.aemu.core.Gaming.apply(this@VmActivity, vm.img.id, d, fps)',
+              '                hideSystemBars()',
+              '                toast("Gaming mode: " + d.label + " @ " + fps + " fps - restart the system")',
+              '            },',
+          ])
+          NEW = "\n".join([
+              '            onPick = { d, fps, q ->',
+              '                gamingDialog = false',
+              '                app.aemu.core.Gaming.apply(this@VmActivity, vm.img.id, d, fps, q)',
+              '                hideSystemBars()',
+              '                toast("Gaming mode: " + d.label + " @ " + fps + " fps, " + q + "p - restart the system")',
+              '            },',
+          ])
+          sub(VM, OLD, NEW, "d, fps, q ->")
+
+          # 2. VmActivity: real fullscreen - no space reserved for the hidden bars
+          OLD2 = "\n".join([
+              '            val bars = ins.getInsets(androidx.core.view.WindowInsetsCompat.Type.systemBars() or androidx.core.view.WindowInsetsCompat.Type.displayCutout())',
+              '            if (bars.top != safeTop || bars.bottom != safeBottom) { safeTop = bars.top; safeBottom = bars.bottom; v.requestLayout() }',
+          ])
+          NEW2 = "\n".join([
+              '            val bars = ins.getInsets(androidx.core.view.WindowInsetsCompat.Type.systemBars() or androidx.core.view.WindowInsetsCompat.Type.displayCutout())',
+              '            // fullscreen: the bars are hidden, so the guest fills the whole screen',
+              '            val top = if (immersive) 0 else bars.top',
+              '            val bottom = if (immersive) 0 else bars.bottom',
+              '            if (top != safeTop || bottom != safeBottom) { safeTop = top; safeBottom = bottom; v.requestLayout() }',
+          ])
+          sub(VM, OLD2, NEW2, "if (immersive) 0 else bars.top")
+
+          # 3. VmActivity: remember the mode and re-hide after dialogs
+          OLD3 = "\n".join([
+              '    private fun hideSystemBars() {',
+              '        runCatching {',
+          ])
+          NEW3 = "\n".join([
+              '    private var immersive = false',
+              '',
+              '    override fun onWindowFocusChanged(hasFocus: Boolean) {',
+              '        super.onWindowFocusChanged(hasFocus)',
+              '        if (hasFocus && immersive) hideSystemBars()',
+              '    }',
+              '',
+              '    private fun hideSystemBars() {',
+              '        immersive = true',
+              '        runCatching {',
+          ])
+          sub(VM, OLD3, NEW3, "private var immersive = false")
+
+          # 4. AppSettings: quality too
+          OLD4 = "\n".join([
+              '        onPick = { d, fps ->',
+              '            gamingDialog = false',
+              '            defaults = app.aemu.core.Gaming.applyDefaults(ctx, defaults, d, fps)',
+              '            AppPrefs.setDefaults(ctx, defaults)',
+              '        },',
+          ])
+          NEW4 = "\n".join([
+              '        onPick = { d, fps, q ->',
+              '            gamingDialog = false',
+              '            defaults = app.aemu.core.Gaming.applyDefaults(ctx, defaults, d, fps, q)',
+              '            AppPrefs.setDefaults(ctx, defaults)',
+              '        },',
+          ])
+          sub(ASA, OLD4, NEW4, "applyDefaults(ctx, defaults, d, fps, q)")
+
+          PY
+
+      - name: Commit
+        run: |
+          git config user.name "fix-bot"
+          git config user.email "fix-bot@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then echo "nothing to commit"; else
+            git commit -m "fullscreen fills the screen, quality selector (360/540/720)"
+            git push
+          fi
